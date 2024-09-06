@@ -45,7 +45,7 @@ class FormDisplay(ttk.Frame):
         
     def mostrar_items(self):
         self.configure_style()
-        self.treeview = ttk.Treeview(self, columns=("size", "lastmod"))
+        self.treeview = ttk.Treeview(self, columns=("size", "lastmod"))      
         self.treeview.heading("#0", text="ARCHIVO")
         self.treeview.heading("size", text="TAMAÑO")
         self.treeview.heading("lastmod", text="MODIFICACIÓN")
