@@ -1,48 +1,37 @@
 
-from sqlalchemy import create_engine, MetaData, Table, Integer, ForeignKey
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import mapped_column, relationship, sessionmaker
+from sqlalchemy import create_engine, MetaData, Table, Integer, Column
+from sqlalchemy.orm import declarative_base, relationship, sessionmaker
+from sqlalchemy.ext.automap import automap_base
 
 # Configura tu URI de conexión SQLite. Asegúrate de ajustar la ruta a tu archivo de base de datos.
 database = 'sqlite:///database//PCdb.sqlite3'
 engine = create_engine(database, echo=True)
 
-metadata = MetaData()
-metadata.reflect(bind=engine) # Reflejar las tablas existentes en la base de datos
+Base = automap_base()
+Base.prepare(engine, reflect=True)
 
-Base = declarative_base() # Crear una clase base para las declaraciones de modelos
+ItemTypes = Base.classes.ItemType
+Components = Base.classes.Component
 
-class ItemTypes(Base):
-    __table__ = Table('ItemType', metadata, autoload_with=engine)
-    # Relación con la tabla 'parent'
-    component = relationship("Components", back_populates="type")
+# metadata = MetaData()
+# metadata.reflect(bind=engine) # Reflejar las tablas existentes en la base de datos
 
-class Components(Base):
-    __table__ = Table('Component', metadata, autoload_with=engine)
-    # Relación con la tabla 'child'
-    type = relationship("ItemTypes", back_populates="component")
+# Base = declarative_base() # Crear una clase base para las declaraciones de modelos
 
+# class ItemTypes(Base):
+#     __table__ = Table('ItemType', metadata, autoload_with=engine)
+#     # Relación con la tabla 'parent'
+#     component = relationship("Components", back_populates="type")
+
+# class Components(Base):
+#     __table__ = Table('Component', metadata, autoload_with=engine)
+#     # Relación con la tabla 'child'
+#     type = relationship("ItemTypes", back_populates="component")
 
 Session = sessionmaker(bind=engine)
 session = Session()
 
-# item_type = Table('ItemType', metadata, autoload_with=engine)
-
-# Definir una clase de modelo para la tabla reflejada
-# class Components(Base):
-#     __table__ = component
-
-# class ItemTypes(Base):
-#     __table__ = item_type
-
-
-# with Session() as session:
-    # procesador = ItemTypes(
-	#     name =	"Procesador"
-    # )
-    
 processor = ItemTypes(
-    type_id = 0,
     name = "Procesador"
 )
 session.add(processor)
@@ -62,10 +51,12 @@ corei9 = Components(
 session.add(corei9)
 session.commit()
 
-# processor = session.query(ItemTypes).first()
-# print(f'ItemTypes: {processor.name}, Component: {[elem.brand for elem in processor.corei9]}')
+processor_query = session.query(ItemTypes).all()
+print("Results.................................", [(elem.type_id, elem.name) for elem in processor_query])
      
 # results = session.query(Components).all()
 # for result in results:
 #     print(result)    
+
+
     

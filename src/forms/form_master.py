@@ -54,12 +54,12 @@ class FormMasterDesign(tk.Tk):
         self.buttonBuild = tk.Button(self.menu_lateral)
 
         buttons_info = [
-            ("Componente (+) ", self.buttonAdd, self.abrir_panel_add),
-            ("Editar ", self.buttonEdit, self.abrir_panel_add),
-            ("Crear nuevo tipo", self.buttonNewType, self.abrir_panel_add),
+            ("Componente (+) ", self.buttonAdd, self.panel_add),
+            ("Editar ", self.buttonEdit, self.panel_add),
+            ("Crear nuevo tipo", self.buttonNewType, self.panel_add),
             ("Info", self.buttonInfo, self.abrir_panel_info),
-            ("Ver TODO", self.buttonDisplay, self.abrir_panel_display),
-            ("Ver SELECCIÓN ", self.buttonBuild, self.abrir_panel_add)
+            ("Ver TODO", self.buttonDisplay, self.panel_display),
+            ("Ver SELECCIÓN ", self.buttonBuild, self.panel_add)
         ]
 
         for text, button, comando in buttons_info:
@@ -92,15 +92,26 @@ class FormMasterDesign(tk.Tk):
         for widget in panel.winfo_children():
             widget.destroy()
     
-    def abrir_panel_add(self):
+    def panel_add(self):
         self.limpiar_panel(self.cuerpo_principal)
         FormAdd(self.cuerpo_principal, self.img_add)
     
-    def abrir_panel_display(self):
+    def panel_edit(self):
+        pass
+    
+    def panel_newtype(self):
+        pass
+
+    def abrir_panel_info(self):
+        FormInfo()
+    
+    def panel_display(self):
         self.limpiar_panel(self.cuerpo_principal)
         FormDisplay(self.cuerpo_principal)
     
-    def abrir_panel_info(self):
-        FormInfo()
+    def panel_select(self):
+        pass
+    
+    
           
     
