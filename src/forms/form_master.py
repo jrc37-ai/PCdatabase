@@ -3,9 +3,10 @@ from config import *
 import util.util_ventana as util_ventana
 import util.util_imagen as util_imagen
 
-from forms.form_add import FormAdd
-from forms.form_display import FormDisplay
+from forms.form_agregar import FormAgregar
 from forms.form_info import FormInfo
+from forms.form_display import FormDisplay
+from forms.form_imagenes import FormImagen
 
 class FormMasterDesign(tk.Tk):
     def __init__(self):
@@ -54,12 +55,12 @@ class FormMasterDesign(tk.Tk):
         self.buttonBuild = tk.Button(self.menu_lateral)
 
         buttons_info = [
-            ("Componente (+) ", self.buttonAdd, self.panel_add),
-            ("Editar ", self.buttonEdit, self.panel_add),
-            ("Crear nuevo tipo", self.buttonNewType, self.panel_add),
+            ("Componente (+) ", self.buttonAdd, self.panel_agregar),
+            ("Editar ", self.buttonEdit, self.panel_edit),
+            ("Crear nuevo tipo", self.buttonNewType, self.panel_newtype),
             ("Info", self.buttonInfo, self.abrir_panel_info),
             ("Ver TODO", self.buttonDisplay, self.panel_display),
-            ("Ver SELECCIÓN ", self.buttonBuild, self.panel_add)
+            ("Ver SELECCIÓN ", self.buttonBuild, self.panel_select)
         ]
 
         for text, button, comando in buttons_info:
@@ -92,15 +93,17 @@ class FormMasterDesign(tk.Tk):
         for widget in panel.winfo_children():
             widget.destroy()
     
-    def panel_add(self):
+    def panel_agregar(self):
         self.limpiar_panel(self.cuerpo_principal)
-        FormAdd(self.cuerpo_principal, self.img_add)
+        FormAgregar(self.cuerpo_principal)
     
     def panel_edit(self):
-        pass
+        self.limpiar_panel(self.cuerpo_principal)
+        FormImagen(self.cuerpo_principal, self.img_add)
     
     def panel_newtype(self):
-        pass
+        self.limpiar_panel(self.cuerpo_principal)
+        FormImagen(self.cuerpo_principal, self.img_add)
 
     def abrir_panel_info(self):
         FormInfo()
@@ -110,7 +113,8 @@ class FormMasterDesign(tk.Tk):
         FormDisplay(self.cuerpo_principal)
     
     def panel_select(self):
-        pass
+        self.limpiar_panel(self.cuerpo_principal)
+        FormImagen(self.cuerpo_principal, self.img_add)
     
     
           

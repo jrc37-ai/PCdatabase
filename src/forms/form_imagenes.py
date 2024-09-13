@@ -1,7 +1,7 @@
 import tkinter as tk
 from config import *
 
-class FormAdd():
+class FormImagen():
     def __init__(self, panel_principal, imagen) -> None:
         self.barra_superior = tk.Frame(panel_principal)
         self.barra_superior.pack(side=tk.TOP, fill=tk.X, expand=False)
