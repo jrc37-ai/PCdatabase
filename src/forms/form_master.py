@@ -57,7 +57,6 @@ class FormMasterDesign(tk.Tk):
         buttons_info = [
             ("Componente (+) ", self.buttonAdd, self.panel_agregar),
             ("Editar ", self.buttonEdit, self.panel_edit),
-            ("Crear nuevo tipo", self.buttonNewType, self.panel_newtype),
             ("Info", self.buttonInfo, self.abrir_panel_info),
             ("Ver TODO", self.buttonDisplay, self.panel_display),
             ("Ver SELECCIÓN ", self.buttonBuild, self.panel_select)
@@ -98,10 +97,6 @@ class FormMasterDesign(tk.Tk):
         FormAgregar(self.cuerpo_principal)
     
     def panel_edit(self):
-        self.limpiar_panel(self.cuerpo_principal)
-        FormImagen(self.cuerpo_principal, self.img_add)
-    
-    def panel_newtype(self):
         self.limpiar_panel(self.cuerpo_principal)
         FormImagen(self.cuerpo_principal, self.img_add)
 

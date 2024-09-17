@@ -9,11 +9,7 @@ class FormAgregar(ttk.Frame):
 
         self.barra_superior = tk.Frame(self.panel_principal)
         self.barra_superior.pack(side=tk.TOP, fill=tk.X, expand=False)
-
-        self.barra_lateral = tk.Frame(self.panel_principal)
-        self.barra_lateral.pack(side=tk.LEFT, fill=tk.Y, expand=False)
-        
-        self.label_barra_superior = tk.Label(self.barra_superior, text="CREAR NUEVO TIPO")
+        self.label_barra_superior = tk.Label(self.barra_superior, text="AGREGAR COMPONENTE")
         self.label_barra_superior.config(
             fg="#fff",
             font=("Helvetica", 13, 'bold'),
@@ -21,80 +17,76 @@ class FormAgregar(ttk.Frame):
             height=3
         )
         self.label_barra_superior.pack(side=tk.TOP, fill="x", expand=False)
+        
+        self.boton_add_frame = tk.Frame(self.label_barra_superior)
+        self.boton_add_frame.pack(side=tk.RIGHT)
+        self.boton_add = tk.Button(self.boton_add_frame, text="AGREGAR")
+        self.boton_add.pack(side=tk.RIGHT, fill='y')
 
-        self.label_barra_lateral = tk.Label(self.barra_lateral)
-        self.label_barra_lateral.config(
+        self.info_entry = tk.Frame(self.panel_principal)
+        self.info_entry.pack(side=tk.TOP, fill=tk.Y, expand=False)
+        self.label_info_entry = tk.Label(self.info_entry)
+        self.label_info_entry.config(
             fg="#fff",
-            bg=COLOR_BARRA_TABLA
+            bg=COLOR_CUERPO_PRINCIPAL
         )
-        self.label_barra_lateral.pack(side=tk.LEFT, fill="y", expand=False)
+        self.label_info_entry.pack(side=tk.TOP, fill="y", expand=False)
 
         self.mostrar_formulario()
         
 
     def mostrar_formulario(self):
-        # campo_textos = [
-        #     'Marca',
-        #     'Modelo',
+        text_fields = [
+            'Marca',
+            'Modelo',
+            'Tienda',
+            'Precio',
+            'URL',
+            'Características',
+            'Capacidad',
+            'Velocidad',
+            'Certificación',
+            'Resolución',
+            'Tasa de refresco',
+            'Calificación'
+        ]
+
+        max_col = 4
+        row = 0
+        col = 0
+        self.field_entries = {}
+        for field in text_fields:
+            # self.field_entries = {
+            #   'Marca': (label, entry),
+            #   'Modelo': (label, entry),
+            #   ...
+            # }
+            self.field_entries[field] = (
+                tk.Label(self.label_info_entry, text=field),
+                ttk.Entry(self.label_info_entry, style=ttk.Style().theme_use('xpnative'))
+                )
             
-        # ]
-
-
-        # label_brand = tk.Label(self.label_barra_lateral, text='Marca')
-        # label_brand.config(
-        #     fg=COLOR_TABLA_TEXTO,
-        #     font=("Helvetica", 12),
-        #     bg=COLOR_TABLA_TITULO_FONDO,
-        #     width=10
-        # )
-        # label_brand.pack(side=tk.TOP, padx=5, pady=10)
-
-        # self.campo_brand = tk.Entry(self.barra_lateral)
-        # self.campo_brand.configure(
-        #     fg=COLOR_TABLA_TEXTO,
-        #     font=("Helvetica", 12),
-        #     bg=COLOR_TABLA_TITULO_FONDO, 
-        #     width=15
-        # )
-        # self.campo_brand.pack(side=tk.TOP, padx=5, pady=12)
-
-
-
-        ########################## MARCA
-        label_brand = tk.Label(self.label_barra_lateral, text='Marca')
-        label_brand.config(
-            fg=COLOR_TABLA_TEXTO,
-            font=("Helvetica", 12),
-            bg=COLOR_TABLA_TITULO_FONDO,
-            width=10
-        )
-        label_brand.pack(side=tk.TOP, padx=5, pady=10)
-
-        self.campo_brand = tk.Entry(self.barra_lateral)
-        self.campo_brand.configure(
-            fg=COLOR_TABLA_TEXTO,
-            font=("Helvetica", 12),
-            bg=COLOR_TABLA_TITULO_FONDO, 
-            width=15
-        )
-        self.campo_brand.pack(side=tk.TOP, padx=5, pady=12)
-
-        ########################## MODELO
-        label_model = tk.Label(self.label_barra_lateral, text='Modelo')
-        label_model.config(
-            fg=COLOR_TABLA_TEXTO,
-            font=("Helvetica", 12),
-            bg=COLOR_TABLA_TITULO_FONDO,
-            width=10
-        )
-        label_model.pack(side=tk.TOP, padx=5, pady=10)
-
-        self.campo_model = tk.Entry(self.barra_lateral)
-        self.campo_model.configure(
-            fg=COLOR_TABLA_TEXTO,
-            font=("Helvetica", 12),
-            bg=COLOR_TABLA_TITULO_FONDO,
-            width=15
-        )
-        self.campo_model.pack(side=tk.TOP, padx=5, pady=12)
-        
+                
+            ## TK.LABEL
+            self.field_entries[field][0].grid(row=row, column=col, padx=5, pady=10)
+            self.field_entries[field][0].config(
+                fg=COLOR_TABLA_TEXTO,
+                font=("Helvetica", 12),
+                bg=COLOR_TABLA_TITULO_FONDO,
+                width=20
+                )
+            
+            ## TK.ENTRY
+            self.field_entries[field][1].grid(row=row, column=col+1, padx=5, pady=10, ipadx=40)
+            # self.field_entries[field][1].configure(
+            #     fg=COLOR_TABLA_TEXTO,
+            #     font=("Helvetica", 12),
+            #     bg=COLOR_TABLA_TITULO_FONDO,     
+            #     width=20
+            #     )
+            
+            col += 2
+            if col >= max_col:
+                col = 0
+                row += 1
+            
