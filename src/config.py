@@ -12,3 +12,18 @@ COLOR_TABLA_SELECCION = "#e1f3ff"
 COLOR_TABLA_SELECCION_TEXTO = "#000000"
 COLOR_TABLA_TITULO_SEL = "#b4bec4"
 COLOR_TABLA_TITULO_TEXSEL = "#ffffff"
+
+TEXT_FIELDS = [
+            'Marca',
+            'Modelo',
+            'Tienda',
+            'Precio',
+            'Capacidad',
+            'Velocidad',
+            'Certificación',
+            'Resolución',
+            'Tasa de refresco',
+            'Calificación',
+            'URL',
+            'Características',
+        ]

@@ -1,5 +1,9 @@
 from forms.form_master import FormMasterDesign
+from database.dboperations import DBOps
 
-app = FormMasterDesign()
+database = DBOps()
+type_ids, names = database.item_types_query()
+
+app = FormMasterDesign(names)
 
 app.mainloop()

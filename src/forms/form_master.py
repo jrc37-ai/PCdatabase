@@ -9,9 +9,10 @@ from forms.form_display import FormDisplay
 from forms.form_imagenes import FormImagen
 
 class FormMasterDesign(tk.Tk):
-    def __init__(self):
+    def __init__(self, names):
         super().__init__()
         self.img_add = util_imagen.leer_imagen("logo.jpg", (800,500))
+        self.type_names = names
         self.config_window()
         self.paneles()
         self.controles_barra_superior()
@@ -94,7 +95,7 @@ class FormMasterDesign(tk.Tk):
     
     def panel_agregar(self):
         self.limpiar_panel(self.cuerpo_principal)
-        FormAgregar(self.cuerpo_principal)
+        FormAgregar(self.cuerpo_principal, self.type_names)
     
     def panel_edit(self):
         self.limpiar_panel(self.cuerpo_principal)
@@ -110,7 +111,4 @@ class FormMasterDesign(tk.Tk):
     def panel_select(self):
         self.limpiar_panel(self.cuerpo_principal)
         FormImagen(self.cuerpo_principal, self.img_add)
-    
-    
-          
-    
+        
