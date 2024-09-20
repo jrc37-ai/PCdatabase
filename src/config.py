@@ -12,18 +12,53 @@ COLOR_TABLA_SELECCION = "#e1f3ff"
 COLOR_TABLA_SELECCION_TEXTO = "#000000"
 COLOR_TABLA_TITULO_SEL = "#b4bec4"
 COLOR_TABLA_TITULO_TEXSEL = "#ffffff"
+BOTON_ADD_FONDO = '#5b9cca'
+BOTON_ADD_TEXTO = "#ffffff"
 
-TEXT_FIELDS = [
-            'Marca',
-            'Modelo',
-            'Tienda',
-            'Precio',
-            'Capacidad',
-            'Velocidad',
-            'Certificación',
-            'Resolución',
-            'Tasa de refresco',
-            'Calificación',
-            'URL',
-            'Características',
-        ]
+TEXT_FIELDS = {
+            'type_id': 'Componente',
+            'brand': 'Marca',
+            'model': 'Modelo',
+            'seller': 'Tienda',
+            'price': 'Precio',
+            'capacity': 'Capacidad',
+            'speed': 'Velocidad',
+            'certification': 'Certificación',
+            'resolution': 'Resolución',
+            'refresh': 'Tasa de refresco',
+            'rate': 'Calificación',
+            'url': 'URL',
+            'features': 'Características'
+}
+
+# TEXT_FIELDS = [
+#             'Componente',
+#             'Marca',
+#             'Modelo',
+#             'Tienda',
+#             'Precio',
+#             'Capacidad',
+#             'Velocidad',
+#             'Certificación',
+#             'Resolución',
+#             'Tasa de refresco',
+#             'Calificación',
+#             'URL',
+#             'Características'
+# ]
+
+# TEXT_FIELDS_DICT = {
+#             'Componente': 'type_id',
+#             'Marca': 'brand',
+#             'Modelo': 'model',
+#             'Tienda': 'seller',
+#             'Precio': 'price',
+#             'Capacidad': 'capacity',
+#             'Velocidad': 'speed',
+#             'Certificación': 'certification',
+#             'Resolución': 'resolution',
+#             'Tasa de refresco': 'refresh',
+#             'Calificación': 'rate',
+#             'URL': 'url',
+#             'Características': 'features',
+# }

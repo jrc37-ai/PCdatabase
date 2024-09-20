@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, MetaData, Table, Integer, Column
+from sqlalchemy import create_engine, MetaData, Table, Integer, Column, inspect
 from sqlalchemy.orm import declarative_base, relationship, sessionmaker
 from sqlalchemy.ext.automap import automap_base
 
@@ -19,37 +19,17 @@ class DBOps():
         self.session = self.Session()
         
         query = self.session.query(self.ItemTypes).all()
-        type_ids = [elem.type_id for elem in query] 
-        names = [elem.name for elem in query] 
+        type_dict = {elem.name: elem.type_id for elem in query}
         self.session.close()
-        return (type_ids, names)
+        return (type_dict)        
 
-    # def func():
-    #     processor = ItemTypes(
-    #         name = "Procesador"
-    #     )
-    #     session.add(processor)
-    #     session.commit()
+    def get_columns(self):
+         # Crear un inspector para obtener información sobre las columnas
+        inspector = inspect(self.engine)
 
-    #     corei9 = Components(
-    #         type_id = processor.type_id,
-    #         brand = "Intel",
-    #         model =	"Core i9",
-    #         seller = "Cyberpuerta",
-    #         price = "12500",
-    #         url = "http://www.cyberpuerta.com",
-    #         features =	"3.4 GHz",
-    #         speed =	3.4,
-    #         selected = 1
-    #     )
-    #     session.add(corei9)
-    #     session.commit()
+        # Obtener el nombre de la tabla correspondiente a self.Components
+        table_name = self.Components.__mapper__.local_table.name
 
-        
-            
-        # results = session.query(Components).all()
-        # for result in results:
-        #     print(result)    
-
-
-            
+        # Obtener las columnas de la tabla
+        columns = inspector.get_columns(table_name)
+        return columns
