@@ -16,6 +16,7 @@ class FormMasterDesign(tk.Tk, DBOps):
         super().__init__()
         self.img_add = util_imagen.leer_imagen("logo.jpg", (800,500))
         self.database = DBOps()
+        self.type_dict = self.database.item_types_query()
         self.config_window()
         self.paneles()
         self.controles_barra_superior()
@@ -98,7 +99,7 @@ class FormMasterDesign(tk.Tk, DBOps):
     
     def panel_agregar(self):
         self.limpiar_panel(self.cuerpo_principal)
-        FormAgregar(self.cuerpo_principal, self.database)
+        FormAgregar(self.cuerpo_principal, self.database, self.type_dict)
     
     def panel_edit(self):
         self.limpiar_panel(self.cuerpo_principal)

@@ -14,6 +14,8 @@ COLOR_TABLA_TITULO_SEL = "#b4bec4"
 COLOR_TABLA_TITULO_TEXSEL = "#ffffff"
 BOTON_ADD_FONDO = '#5b9cca'
 BOTON_ADD_TEXTO = "#ffffff"
+BOTON_DISABLED = '#4dda2a'
+BOTON_DISABLED_TEXTO = "#ffffff"
 
 TEXT_FIELDS = {
             'type_id': 'Componente',
