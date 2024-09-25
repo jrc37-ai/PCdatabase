@@ -21,7 +21,7 @@ class DBOps():
         query = self.session.query(self.ItemTypes).all()
         type_dict = {elem.name: elem.type_id for elem in query}
         self.session.close()
-        return (type_dict)        
+        return (type_dict)
 
     def get_columns(self):
          # Crear un inspector para obtener información sobre las columnas

@@ -12,7 +12,11 @@ class FormAgregar(ttk.Frame):
         self.panel_principal = panel_principal
         self.database = database
         self.type_dict = type_dict
-        self.fields_reset()
+        self.text_fields = pd.DataFrame(
+            TEXT_FIELDS,
+            columns= list(TEXT_FIELDS.keys()) + ['BD_VALUE', 'ENTRY_VALUE']
+            )
+        print(self.text_fields)
         self.top_bar()
         self.panel_entradas()
 
@@ -30,7 +34,6 @@ class FormAgregar(ttk.Frame):
         
     def panel_entradas(self):
         self.limpiar_panel(self.panel_principal)
-        
         self.info_entry = tk.Frame(self.panel_principal, bg=COLOR_CUERPO_PRINCIPAL)
         self.info_entry.pack(expand=False)
                 
@@ -53,53 +56,77 @@ class FormAgregar(ttk.Frame):
         self.boton_continuar.pack(side=tk.TOP, pady=10)
         
     def mostrar_formulario(self):
-        for key in self.TEXT_FIELDS:
+        for bd_name in TEXT_FIELDS['BD_NAME']:
+            # self.field_entries = {
+            #   'Marca': (label, entry),
+            #   'Modelo': (label, entry),
+            #   ...
+            # }
+            field = TEXT_FIELDS[key]
             self.label_info_entry = tk.Frame(self.info_entry, bg=COLOR_CUERPO_PRINCIPAL)
             self.label_info_entry.pack(side=tk.TOP, fill=tk.X, pady=1)
 
-            if key in ['COMPONENTE']:
-                font = ("Helvetica", 12, 'bold')
-                self.TEXT_FIELDS[key]['ENTRY'] = ttk.Combobox(self.label_info_entry, width=30, font=('Arial', 12))
-                self.TEXT_FIELDS[key]['ENTRY']['values'] = list(self.type_dict.keys())
-                self.TEXT_FIELDS[key]['ENTRY'].set(list(self.type_dict.keys())[self.combobox])
+            if field in ['Componente']:
+                self.component_bar(field)
             else:
-                font = ("Helvetica", 12)
-                self.TEXT_FIELDS[key]['ENTRY'] = ttk.Entry(self.label_info_entry,
-                                        style=ttk.Style().theme_use('xpnative'),
-                                        width=60,
-                                        font=('Arial',12)
-                                        )
-                self.TEXT_FIELDS[key]['ENTRY'].insert(0,self.TEXT_FIELDS[key]['ENTRY_VALUE'])
+                self.field_entries[field] = (
+                    tk.Label(self.label_info_entry, text=field),
+                    ttk.Entry(self.label_info_entry,
+                              style=ttk.Style().theme_use('xpnative'),
+                              width=60,
+                              font=('Arial',12),
+                              )
+                    )
+                self.field_entries[field][1].insert(0,self.value_dict[key])
+
+                ## TK.LABEL
+                self.field_entries[field][0].config(
+                    fg=COLOR_TABLA_TEXTO,
+                    font=("Helvetica", 12),
+                    bg=COLOR_TABLA_TITULO_FONDO,
+                    width=20
+                    )
+                self.field_entries[field][0].pack(side=tk.LEFT)
             
-            self.TEXT_FIELDS[key]['LABEL'] = tk.Label(self.label_info_entry, text=key)
-            self.TEXT_FIELDS[key]['LABEL'].config(
-                fg=COLOR_TABLA_TEXTO,
-                font=font,
-                bg=COLOR_TABLA_TITULO_FONDO,
-                width=20
-                )              
-               
-            self.TEXT_FIELDS[key]['LABEL'].pack(side=tk.LEFT)
-            self.TEXT_FIELDS[key]['ENTRY'].pack(side=tk.LEFT, padx=10)
+                ## TK.ENTRY
+                self.field_entries[field][1].pack(side=tk.LEFT, padx=10)
+
+    def component_bar(self, field):        
+        self.field_entries[field] = (
+            tk.Label(self.label_info_entry, text=field.upper()),
+            ttk.Combobox(self.label_info_entry, width=30, font=('Arial', 12))
+            )
+        
+        ## TK.LABEL
+        self.field_entries[field][0].config(
+            fg=COLOR_TABLA_TEXTO,
+            font=("Helvetica", 12, 'bold'),
+            bg=COLOR_TABLA_TITULO_FONDO,
+            width=18
+            )
+        self.field_entries[field][0].pack(side=tk.LEFT, pady=10)
+
+        ## TK.ENTRY
+        self.field_entries[field][1]['values'] = list(self.type_dict.keys())
+        self.field_entries[field][1].pack(side=tk.LEFT, padx=10, pady=10)
         
     def mostrar_resumen(self):
-        for key in self.TEXT_FIELDS:
-            self.TEXT_FIELDS[key]['ENTRY_VALUE'] = self.TEXT_FIELDS[key]['ENTRY'].get()
-            if len(self.TEXT_FIELDS[key]['ENTRY_VALUE']) == 0:
-                self.TEXT_FIELDS[key]['BD_VALUE'] = None
+        for column in self.value_dict:
+            if len(self.field_entries[TEXT_FIELDS[column]][1].get()) == 0:
+                self.value_dict[column] = ""
             else:
-                self.TEXT_FIELDS[key]['BD_VALUE'] = self.TEXT_FIELDS[key]['ENTRY_VALUE']
+                self.value_dict[column] = self.field_entries[TEXT_FIELDS[column]][1].get()
                 
         self.limpiar_panel(self.panel_principal)
         
         self.top_bar('RESUMEN')
-        
-        for key in self.TEXT_FIELDS:
+                
+        for field in self.value_dict:
             frame_resumen = tk.Frame(self.panel_principal, bg=COLOR_CUERPO_PRINCIPAL)
             frame_resumen.pack(side=tk.TOP, pady=1)
 
-            label_resumen_campo = tk.Label(frame_resumen, text=key)
-            label_resumen_dato = tk.Label(frame_resumen, text=self.TEXT_FIELDS[key]['ENTRY_VALUE'])
+            label_resumen_campo = tk.Label(frame_resumen, text=TEXT_FIELDS[field])
+            label_resumen_dato = tk.Label(frame_resumen, text=self.value_dict[field])
             
             label_resumen_campo.config(
                     fg=COLOR_TABLA_TEXTO,
@@ -135,7 +162,6 @@ class FormAgregar(ttk.Frame):
             command=self.panel_entradas
             )
         self.boton_editar.pack(side=tk.LEFT)
-        self.combobox = list(self.type_dict.keys()).index(self.TEXT_FIELDS['COMPONENTE']['ENTRY_VALUE'])
         
         self.boton_agregar = tk.Button(frame_botones)
         self.boton_agregar.config(
@@ -155,19 +181,19 @@ class FormAgregar(ttk.Frame):
         
     def ingresar_datos(self):
         componente = self.database.Components(
-            type_id = self.type_dict[self.TEXT_FIELDS['COMPONENTE']['BD_VALUE']],
-            brand = self.TEXT_FIELDS['Marca']['BD_VALUE'],
-            model =	self.TEXT_FIELDS['Modelo']['BD_VALUE'],
-            seller = self.TEXT_FIELDS['Tienda']['BD_VALUE'],
-            price = self.TEXT_FIELDS['Precio']['BD_VALUE'],
-            url = self.TEXT_FIELDS['URL']['BD_VALUE'],
-            features = self.TEXT_FIELDS['Características']['BD_VALUE'],
-            capacity = self.TEXT_FIELDS['Capacidad']['BD_VALUE'],
-            speed = self.TEXT_FIELDS['Velocidad']['BD_VALUE'],
-            certification = self.TEXT_FIELDS['Certificación']['BD_VALUE'],
-            resolution = self.TEXT_FIELDS['Resolución']['BD_VALUE'],
-            refresh = self.TEXT_FIELDS['Tasa de refresco']['BD_VALUE'],
-            rate = self.TEXT_FIELDS['Calificación']['BD_VALUE'],
+            type_id = self.type_dict[self.value_dict['type_id']],
+            brand = self.value_dict['brand'],
+            model =	self.value_dict['model'],
+            seller = self.value_dict['seller'],
+            price = self.value_dict['price'],
+            url = self.value_dict['url'],
+            features = self.value_dict['features'],
+            capacity = self.value_dict['capacity'],
+            speed = self.value_dict['speed'],
+            certification = self.value_dict['certification'],
+            resolution = self.value_dict['resolution'],
+            refresh = self.value_dict['refresh'],
+            rate = self.value_dict['rate'],
             selected = 0
             )
         self.database.session.add(componente)
@@ -176,9 +202,8 @@ class FormAgregar(ttk.Frame):
         self.boton_editar.config(
             text='NUEVO (+)',
             )
+        self.value_dict = {key:"" for key in TEXT_FIELDS.keys()}
         
-        self.fields_reset()
-                
         self.boton_agregar.config(
             text='AGREGADO',
             background=BOTON_DISABLED,
@@ -186,13 +211,6 @@ class FormAgregar(ttk.Frame):
             state=tk.DISABLED
         )       
     
-    def fields_reset(self):
-         # Reiniciar los valores de los entry a None
-        self.TEXT_FIELDS = DATA_FIELDS.copy()
-        for key in self.TEXT_FIELDS:
-            self.TEXT_FIELDS[key] = DATA_FIELDS[key].copy()
-        self.combobox = 0
-        
     def limpiar_panel(self, panel):
         for widget in panel.winfo_children():
             widget.destroy()
