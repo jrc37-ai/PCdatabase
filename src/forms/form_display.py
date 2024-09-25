@@ -3,9 +3,12 @@ from tkinter import ttk
 from config import *
 
 class FormDisplay(ttk.Frame):
-    def __init__(self, panel_principal) -> None:
+    def __init__(self, panel_principal, type_dict, component_dict) -> None:
         super().__init__(panel_principal)
         self.panel_principal = panel_principal
+        self.type_dict = type_dict
+        self.component_dict = component_dict
+        
         self.barra_superior = tk.Frame(self.panel_principal)
         self.barra_superior.pack(side=tk.TOP, fill=tk.X, expand=False)
         
@@ -18,6 +21,35 @@ class FormDisplay(ttk.Frame):
         )
         self.labelBarra.pack(side=tk.TOP, fill="x", expand=False)
         self.mostrar_items()
+    
+    def mostrar_items(self):
+        self.configure_style()
+        self.treeview = ttk.Treeview(self, columns=("size", "lastmod"))      
+        # self.treeview['columns'] = ()
+        for elem in self.component_dict:
+            print("Resultado::::::::::::::::::::::::", elem)
+        
+        self.treeview.heading("#0", text="ARCHIVO")
+        self.treeview.heading("size", text="TAMAÑO")
+        self.treeview.heading("lastmod", text="MODIFICACIÓN")
+        
+        self.treeview.column("#0", anchor=tk.CENTER)
+        self.treeview.column("size", anchor=tk.CENTER)
+        self.treeview.column("lastmod", anchor=tk.CENTER)
+        self.treeview.insert(
+            "",
+            tk.END,
+            text="README.txt",
+            values=("850 bytes", "18:30")
+        )
+        self.treeview.insert(
+            "",
+            tk.END,
+            text="Dos.dos",
+            values=("1000 bytes", "20:30")
+        )
+        self.treeview.pack(expand=True, fill='both')
+        self.pack(expand=True, fill='both')
     
     def configure_style(self):
         style = ttk.Style()
@@ -42,28 +74,4 @@ class FormDisplay(ttk.Frame):
         style.map('Treeview.Heading',
                   background=[('active', COLOR_TABLA_TITULO_SEL)],  # Fondo de los encabezados cuando se activa
                   foreground=[('active', COLOR_TABLA_TITULO_TEXSEL)])  # Texto de los encabezados cuando se activa
-        
-    def mostrar_items(self):
-        self.configure_style()
-        self.treeview = ttk.Treeview(self, columns=("size", "lastmod"))      
-        self.treeview.heading("#0", text="ARCHIVO")
-        self.treeview.heading("size", text="TAMAÑO")
-        self.treeview.heading("lastmod", text="MODIFICACIÓN")
-        self.treeview.column("#0", anchor=tk.CENTER)
-        self.treeview.column("size", anchor=tk.CENTER)
-        self.treeview.column("lastmod", anchor=tk.CENTER)
-        self.treeview.insert(
-            "",
-            tk.END,
-            text="README.txt",
-            values=("850 bytes", "18:30")
-        )
-        self.treeview.insert(
-            "",
-            tk.END,
-            text="Dos.dos",
-            values=("1000 bytes", "20:30")
-        )
-        self.treeview.pack(expand=True, fill='both')
-        self.pack(expand=True, fill='both')
         

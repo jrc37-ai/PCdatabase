@@ -1,5 +1,5 @@
-from sqlalchemy import create_engine, MetaData, Table, Integer, Column, inspect
-from sqlalchemy.orm import declarative_base, relationship, sessionmaker
+from sqlalchemy import create_engine, inspect, select
+from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.automap import automap_base
 
 class DBOps():
@@ -14,14 +14,25 @@ class DBOps():
         self.ItemTypes = self.base.classes.ItemType
         self.Components = self.base.classes.Component
         
-    def item_types_query(self):
+    def db_query(self):
         self.Session = sessionmaker(bind=self.engine)
         self.session = self.Session()
         
-        query = self.session.query(self.ItemTypes).all()
-        type_dict = {elem.name: elem.type_id for elem in query}
+        item_query = self.session.query(self.ItemTypes).all()
+        type_dict = {elem.name: elem.type_id for elem in item_query}
+        
+        component_query = self.session.query(self.Components).all()
+                      
+        component_dict = []
+        for component in component_query:
+            component_dict += {
+                        column.name: getattr(component, column.name)
+                        for column in self.Components.__table__.columns
+                }
+        print(component_dict)
+            
         self.session.close()
-        return (type_dict)
+        return (type_dict, component_dict)
 
     def get_columns(self):
          # Crear un inspector para obtener información sobre las columnas

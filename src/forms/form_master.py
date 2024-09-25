@@ -11,12 +11,12 @@ from forms.form_imagenes import FormImagen
 
 from database.dboperations import DBOps
 
-class FormMasterDesign(tk.Tk, DBOps):
+class FormMasterDesign(tk.Tk):
     def __init__(self):
         super().__init__()
         self.img_add = util_imagen.leer_imagen("logo.jpg", (800,500))
         self.database = DBOps()
-        self.type_dict = self.database.item_types_query()
+        self.type_dict, self.component_dict = self.database.db_query()
         self.config_window()
         self.paneles()
         self.controles_barra_superior()
@@ -110,7 +110,7 @@ class FormMasterDesign(tk.Tk, DBOps):
     
     def panel_display(self):
         self.limpiar_panel(self.cuerpo_principal)
-        FormDisplay(self.cuerpo_principal)
+        FormDisplay(self.cuerpo_principal, self.type_dict, self.component_dict)
     
     def panel_select(self):
         self.limpiar_panel(self.cuerpo_principal)

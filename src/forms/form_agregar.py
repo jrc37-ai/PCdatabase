@@ -32,7 +32,7 @@ class FormAgregar(ttk.Frame):
         self.limpiar_panel(self.panel_principal)
         
         self.info_entry = tk.Frame(self.panel_principal, bg=COLOR_CUERPO_PRINCIPAL)
-        self.info_entry.pack(expand=False)
+        self.info_entry.pack(expand=False, pady=10)
                 
         self.mostrar_formulario()
         
