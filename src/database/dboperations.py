@@ -25,11 +25,12 @@ class DBOps():
                       
         component_dict = []
         for component in component_query:
-            component_dict += {
+            component_dict += [
+                {
                         column.name: getattr(component, column.name)
                         for column in self.Components.__table__.columns
                 }
-        print(component_dict)
+            ]
             
         self.session.close()
         return (type_dict, component_dict)
