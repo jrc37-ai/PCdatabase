@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+from forms.form_agregar import FormAgregar
 from config import *
 
 class FormDisplay(ttk.Frame):
@@ -8,6 +9,7 @@ class FormDisplay(ttk.Frame):
         self.panel_principal = panel_principal
         self.type_dict = type_dict
         self.component_dict = component_dict
+        self.panel_entradas = FormAgregar.panel_entradas(self.panel_principal)
         
         self.barra_superior = tk.Frame(self.panel_principal)
         self.barra_superior.pack(side=tk.TOP, fill=tk.X, expand=False)
@@ -17,11 +19,12 @@ class FormDisplay(ttk.Frame):
             fg="#fff",
             font=("Helvetica", 14, 'bold'),
             bg=COLOR_BARRA_TABLA,
-            height=3,
+            height=2,
             anchor=tk.W,
             padx=20
         )
         self.labelBarra.pack(side=tk.LEFT, fill=tk.X, expand=True)
+        self.mostrar_botones()
         self.mostrar_items()
     
     def mostrar_items(self):
@@ -37,12 +40,13 @@ class FormDisplay(ttk.Frame):
                     values += [componente[DATA_FIELDS[elem]['BD_NAME']]]
             
             values = tuple(values)
-            self.treeview.insert(parent='',
-                                 index=index,
-                                 iid=index,
-                                 text='',
-                                 values=values
-                                 )
+            self.treeview.insert(
+                parent='',
+                index=index,
+                iid=index,
+                text='',
+                values=values
+                )
             
     def configurar_treeview(self):
         self.configure_style()
@@ -75,7 +79,7 @@ class FormDisplay(ttk.Frame):
             self.treeview.heading(columna, text=columna)
         
         self.treeview.pack(side=tk.TOP, expand=True, fill=tk.BOTH)
-        # self.treeview.bind("<<TreeviewSelect>>", self.al_seleccionar_treeview)
+        self.treeview.bind("<<TreeviewSelect>>", self.seleccion_linea)
         
         y_scroll.config(command=self.treeview.yview)
         x_scroll.config(command=self.treeview.xview)
@@ -104,3 +108,52 @@ class FormDisplay(ttk.Frame):
                   background=[('active', COLOR_TABLA_TITULO_SEL)],  # Fondo de los encabezados cuando se activa
                   foreground=[('active', COLOR_TABLA_TITULO_TEXSEL)])  # Texto de los encabezados cuando se activa
         
+    def seleccion_linea(self, event):        
+        self.btn_editar.config(state='normal')
+        self.btn_eliminar.config(state='normal')
+        
+        seleccion = event.widget.selection()
+        if seleccion:
+            item = event.widget.item(seleccion[0], 'values')
+            if item:
+                print(item[1])
+    
+    def mostrar_botones(self):
+        self.btn_eliminar = tk.Button(self.labelBarra)
+        self.btn_eliminar.config(
+            text='Eliminar',
+            font=('Arial', 10, 'bold'),
+            borderwidth=4,
+            width=10,
+            relief='flat',
+            overrelief='groove',
+            background=BOTON_ADD_FONDO,
+            foreground=BOTON_ADD_TEXTO,
+            activebackground=BOTON_ADD_FONDO,
+            activeforeground=BOTON_ADD_TEXTO,
+            disabledforeground=COLOR_BARRA_TABLA,
+            command=self.panel_entradas,
+            state='disabled'
+            )
+        self.btn_eliminar.pack(side=tk.RIGHT, pady=10, padx=10)
+        
+        self.btn_editar = tk.Button(self.labelBarra)
+        self.btn_editar.config(
+            text='Editar',
+            font=('Arial', 10, 'bold'),
+            borderwidth=4,
+            width=10,
+            relief='flat',
+            overrelief='groove',
+            background=BOTON_ADD_FONDO,
+            foreground=BOTON_ADD_TEXTO,
+            activebackground=BOTON_ADD_FONDO,
+            activeforeground=BOTON_ADD_TEXTO,
+            disabledforeground=COLOR_BARRA_TABLA,
+            command=self.eliminar_registro,
+            state='disabled'
+            )
+        self.btn_editar.pack(side=tk.RIGHT, pady=10, padx=10)
+    
+    def eliminar_registro(self):
+        pass
