@@ -3,13 +3,16 @@ from tkinter import ttk
 from forms.form_agregar import FormAgregar
 from config import *
 
+from database.dboperations import DBOps
+
 class FormDisplay(ttk.Frame):
     def __init__(self, panel_principal, type_dict, component_dict) -> None:
         super().__init__(panel_principal)
         self.panel_principal = panel_principal
         self.type_dict = type_dict
         self.component_dict = component_dict
-        self.panel_entradas = FormAgregar.panel_entradas(self.panel_principal)
+        self.database = DBOps()
+        self.panel_entradas = FormAgregar(self.panel_principal, self.database, self.type_dict).panel_entradas()
         
         self.barra_superior = tk.Frame(self.panel_principal)
         self.barra_superior.pack(side=tk.TOP, fill=tk.X, expand=False)
@@ -132,7 +135,7 @@ class FormDisplay(ttk.Frame):
             activebackground=BOTON_ADD_FONDO,
             activeforeground=BOTON_ADD_TEXTO,
             disabledforeground=COLOR_BARRA_TABLA,
-            command=self.panel_entradas,
+            command=self.eliminar_registro,
             state='disabled'
             )
         self.btn_eliminar.pack(side=tk.RIGHT, pady=10, padx=10)
