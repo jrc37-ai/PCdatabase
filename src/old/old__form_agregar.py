@@ -1,20 +1,17 @@
 import tkinter as tk
 from tkinter import ttk
-
-from sqlalchemy.orm import Session
-
-from database.modelos import ComponentModel
+import pandas as pd
+from database.dboperations import DBOps
 from config import *
 
+
 class FormAgregar(ttk.Frame):
-    def __init__(self, panel_principal, db_access) -> None:
+    def __init__(self, panel_principal, database, type_dict) -> None:
         super().__init__(panel_principal)
         self.field_entries = {}
         self.panel_principal = panel_principal
-        self.db = db_access
-        self.item = None
-        self.texto_agregar = 'AGREGAR'
-        self.comando = self.ingresar_datos
+        self.database = database
+        self.type_dict = type_dict
         self.fields_reset()
         self.top_bar()
         self.panel_entradas()
@@ -55,7 +52,7 @@ class FormAgregar(ttk.Frame):
             )
         self.boton_continuar.pack(side=tk.TOP, pady=10)
         
-    def mostrar_formulario(self):          
+    def mostrar_formulario(self):
         for key in self.TEXT_FIELDS:
             self.label_info_entry = tk.Frame(self.info_entry, bg=COLOR_CUERPO_PRINCIPAL)
             self.label_info_entry.pack(side=tk.TOP, fill=tk.X, pady=1)
@@ -63,8 +60,8 @@ class FormAgregar(ttk.Frame):
             if key in ['COMPONENTE']:
                 font = ("Helvetica", 12, 'bold')
                 self.TEXT_FIELDS[key]['ENTRY'] = ttk.Combobox(self.label_info_entry, width=30, font=('Arial', 12))
-                self.TEXT_FIELDS[key]['ENTRY']['values'] = [type.name for type in self.db.Item_types]
-                self.TEXT_FIELDS[key]['ENTRY'].set(self.TEXT_FIELDS[key]['ENTRY']['values'][self.combobox])
+                self.TEXT_FIELDS[key]['ENTRY']['values'] = list(self.type_dict.keys())
+                self.TEXT_FIELDS[key]['ENTRY'].set(list(self.type_dict.keys())[self.combobox])
             else:
                 font = ("Helvetica", 12)
                 self.TEXT_FIELDS[key]['ENTRY'] = ttk.Entry(self.label_info_entry,
@@ -138,15 +135,11 @@ class FormAgregar(ttk.Frame):
             command=self.panel_entradas
             )
         self.boton_editar.pack(side=tk.LEFT)
-        self.combobox = [
-            type.type_id-1
-            for type in self.db.Item_types
-            if type.name == self.TEXT_FIELDS['COMPONENTE']['ENTRY_VALUE']
-            ][0]
-               
+        self.combobox = list(self.type_dict.keys()).index(self.TEXT_FIELDS['COMPONENTE']['ENTRY_VALUE'])
+        
         self.boton_agregar = tk.Button(frame_botones)
         self.boton_agregar.config(
-            text=self.texto_agregar, # AGREGAR O MODIFICAR
+            text='AGREGAR',
             font=('Arial', 12, 'bold'),
             borderwidth=4,
             width=40,
@@ -156,33 +149,29 @@ class FormAgregar(ttk.Frame):
             foreground=BOTON_ADD_TEXTO,
             activebackground=BOTON_ADD_FONDO,
             activeforeground=BOTON_ADD_TEXTO,
-            command=self.comando,
+            command=self.ingresar_datos,
         )
         self.boton_agregar.pack(side=tk.LEFT, padx=10)
         
     def ingresar_datos(self):
-        componente = {
-            'type_id': [
-                type.type_id
-                for type in self.db.Item_types
-                if type.name == self.TEXT_FIELDS['COMPONENTE']['BD_VALUE']
-                ][0],
-            'brand': self.TEXT_FIELDS['Marca']['BD_VALUE'],
-            'model': self.TEXT_FIELDS['Modelo']['BD_VALUE'],
-            'seller': self.TEXT_FIELDS['Tienda']['BD_VALUE'],
-            'price': self.TEXT_FIELDS['Precio']['BD_VALUE'],
-            'url': self.TEXT_FIELDS['URL']['BD_VALUE'],
-            'features': self.TEXT_FIELDS['Características']['BD_VALUE'],
-            'capacity': self.TEXT_FIELDS['Capacidad']['BD_VALUE'],
-            'speed': self.TEXT_FIELDS['Velocidad']['BD_VALUE'],
-            'certification': self.TEXT_FIELDS['Certificación']['BD_VALUE'],
-            'resolution': self.TEXT_FIELDS['Resolución']['BD_VALUE'],
-            'refresh': self.TEXT_FIELDS['Tasa de refresco']['BD_VALUE'],
-            'rate': self.TEXT_FIELDS['Calificación']['BD_VALUE'],
-            'selected': 0
-        }
-
-        self.db.registrar_componente(**componente)
+        componente = self.database.Components(
+            type_id = self.type_dict[self.TEXT_FIELDS['COMPONENTE']['BD_VALUE']],
+            brand = self.TEXT_FIELDS['Marca']['BD_VALUE'],
+            model =	self.TEXT_FIELDS['Modelo']['BD_VALUE'],
+            seller = self.TEXT_FIELDS['Tienda']['BD_VALUE'],
+            price = self.TEXT_FIELDS['Precio']['BD_VALUE'],
+            url = self.TEXT_FIELDS['URL']['BD_VALUE'],
+            features = self.TEXT_FIELDS['Características']['BD_VALUE'],
+            capacity = self.TEXT_FIELDS['Capacidad']['BD_VALUE'],
+            speed = self.TEXT_FIELDS['Velocidad']['BD_VALUE'],
+            certification = self.TEXT_FIELDS['Certificación']['BD_VALUE'],
+            resolution = self.TEXT_FIELDS['Resolución']['BD_VALUE'],
+            refresh = self.TEXT_FIELDS['Tasa de refresco']['BD_VALUE'],
+            rate = self.TEXT_FIELDS['Calificación']['BD_VALUE'],
+            selected = 0
+            )
+        self.database.session.add(componente)
+        self.database.session.commit()
         
         self.boton_editar.config(
             text='NUEVO (+)',
@@ -196,44 +185,7 @@ class FormAgregar(ttk.Frame):
             disabledforeground=BOTON_DISABLED_TEXTO,
             state=tk.DISABLED
         )       
-
-    def modificar_datos(self):
-        componente = {
-            'type_id': [
-                type.type_id
-                for type in self.db.Item_types
-                if type.name == self.TEXT_FIELDS['COMPONENTE']['BD_VALUE']
-                ][0],
-            'brand': self.TEXT_FIELDS['Marca']['BD_VALUE'],
-            'model': self.TEXT_FIELDS['Modelo']['BD_VALUE'],
-            'seller': self.TEXT_FIELDS['Tienda']['BD_VALUE'],
-            'price': self.TEXT_FIELDS['Precio']['BD_VALUE'],
-            'url': self.TEXT_FIELDS['URL']['BD_VALUE'],
-            'features': self.TEXT_FIELDS['Características']['BD_VALUE'],
-            'capacity': self.TEXT_FIELDS['Capacidad']['BD_VALUE'],
-            'speed': self.TEXT_FIELDS['Velocidad']['BD_VALUE'],
-            'certification': self.TEXT_FIELDS['Certificación']['BD_VALUE'],
-            'resolution': self.TEXT_FIELDS['Resolución']['BD_VALUE'],
-            'refresh': self.TEXT_FIELDS['Tasa de refresco']['BD_VALUE'],
-            'rate': self.TEXT_FIELDS['Calificación']['BD_VALUE'],
-            'selected': 0
-        }
-        
-        self.db.modificar_componente(self.item, **componente)
-        
-        self.boton_editar.config(
-            text='VER TODO'
-            )
-        
-        self.fields_reset()
-                
-        self.boton_agregar.config(
-            text='MODIFICADO',
-            background=BOTON_DISABLED,
-            disabledforeground=BOTON_DISABLED_TEXTO,
-            state=tk.DISABLED
-        )       
-            
+    
     def fields_reset(self):
          # Reiniciar los valores de los entry a None
         self.TEXT_FIELDS = DATA_FIELDS.copy()

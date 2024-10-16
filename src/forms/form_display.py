@@ -1,18 +1,18 @@
 import tkinter as tk
 from tkinter import ttk
+
+from sqlalchemy.orm import Session
+
 from forms.form_agregar import FormAgregar
+from database.modelos import ComponentModel
+from database.dboperations import DBOps
 from config import *
 
-from database.dboperations import DBOps
-
 class FormDisplay(ttk.Frame):
-    def __init__(self, panel_principal, type_dict, component_dict) -> None:
+    def __init__(self, panel_principal) -> None:
         super().__init__(panel_principal)
         self.panel_principal = panel_principal
-        self.type_dict = type_dict
-        self.component_dict = component_dict
-        self.database = DBOps()
-        self.panel_entradas = FormAgregar(self.panel_principal, self.database, self.type_dict).panel_entradas()
+        self.db = DBOps()
         
         self.barra_superior = tk.Frame(self.panel_principal)
         self.barra_superior.pack(side=tk.TOP, fill=tk.X, expand=False)
@@ -31,18 +31,17 @@ class FormDisplay(ttk.Frame):
         self.mostrar_items()
     
     def mostrar_items(self):
-        self.configurar_treeview()
+        self.configurar_treeview()             
         
-        for index, componente in enumerate(self.component_dict):
-            values = [componente['item_id']]
-            for elem in DATA_FIELDS:
-                if elem == 'COMPONENTE':
-                    place = list(self.type_dict.values()).index(componente[DATA_FIELDS[elem]['BD_NAME']])
-                    values += [list(self.type_dict.keys())[place]]
+        for index, componente in enumerate(self.db.Components):
+            values = []
+            for columna in ComponentModel.__table__.columns:
+                if columna.foreign_keys:
+                    values += [componente.item_type.name]
                 else:
-                    values += [componente[DATA_FIELDS[elem]['BD_NAME']]]
-            
+                    values += [getattr(componente, columna.name)]
             values = tuple(values)
+            
             self.treeview.insert(
                 parent='',
                 index=index,
@@ -50,7 +49,7 @@ class FormDisplay(ttk.Frame):
                 text='',
                 values=values
                 )
-            
+        
     def configurar_treeview(self):
         self.configure_style()
         
@@ -111,15 +110,13 @@ class FormDisplay(ttk.Frame):
                   background=[('active', COLOR_TABLA_TITULO_SEL)],  # Fondo de los encabezados cuando se activa
                   foreground=[('active', COLOR_TABLA_TITULO_TEXSEL)])  # Texto de los encabezados cuando se activa
         
-    def seleccion_linea(self, event):        
+    def seleccion_linea(self, event):                
         self.btn_editar.config(state='normal')
         self.btn_eliminar.config(state='normal')
         
         seleccion = event.widget.selection()
         if seleccion:
-            item = event.widget.item(seleccion[0], 'values')
-            if item:
-                print(item[1])
+            self.item = event.widget.item(seleccion[0], 'values')
     
     def mostrar_botones(self):
         self.btn_eliminar = tk.Button(self.labelBarra)
@@ -153,10 +150,32 @@ class FormDisplay(ttk.Frame):
             activebackground=BOTON_ADD_FONDO,
             activeforeground=BOTON_ADD_TEXTO,
             disabledforeground=COLOR_BARRA_TABLA,
-            command=self.eliminar_registro,
+            command=self.activar_panel_entradas,
             state='disabled'
             )
         self.btn_editar.pack(side=tk.RIGHT, pady=10, padx=10)
     
-    def eliminar_registro(self):
+    def activar_panel_entradas(self):
+        if self.item:
+            self.entradas = FormAgregar(panel_principal=self.panel_principal,
+                                        db_access=self.db)
+            self.entradas.fields_reset()
+            
+            i = 1
+            for key in self.entradas.TEXT_FIELDS:
+                self.entradas.TEXT_FIELDS[key]['ENTRY_VALUE'] = self.item[i]
+                i += 1
+            
+            self.entradas.combobox = [
+                type.type_id-1
+                for type in self.db.Item_types
+                if type.name == self.entradas.TEXT_FIELDS['COMPONENTE']['ENTRY_VALUE']
+                ][0]
+            
+        self.entradas.texto_agregar = 'MODIFICAR'
+        self.entradas.comando = self.entradas.modificar_datos
+        self.entradas.item = self.item[0]
+        self.entradas.panel_entradas()
+            
+    def eliminar_registro(self):        
         pass
