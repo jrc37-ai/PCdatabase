@@ -55,7 +55,7 @@ class FormAgregar(ttk.Frame):
             )
         self.boton_continuar.pack(side=tk.TOP, pady=10)
         
-    def mostrar_formulario(self):          
+    def mostrar_formulario(self):
         for key in self.TEXT_FIELDS:
             self.label_info_entry = tk.Frame(self.info_entry, bg=COLOR_CUERPO_PRINCIPAL)
             self.label_info_entry.pack(side=tk.TOP, fill=tk.X, pady=1)
@@ -161,26 +161,34 @@ class FormAgregar(ttk.Frame):
         self.boton_agregar.pack(side=tk.LEFT, padx=10)
         
     def ingresar_datos(self):
-        componente = {
-            'type_id': [
-                type.type_id
-                for type in self.db.Item_types
-                if type.name == self.TEXT_FIELDS['COMPONENTE']['BD_VALUE']
-                ][0],
-            'brand': self.TEXT_FIELDS['Marca']['BD_VALUE'],
-            'model': self.TEXT_FIELDS['Modelo']['BD_VALUE'],
-            'seller': self.TEXT_FIELDS['Tienda']['BD_VALUE'],
-            'price': self.TEXT_FIELDS['Precio']['BD_VALUE'],
-            'url': self.TEXT_FIELDS['URL']['BD_VALUE'],
-            'features': self.TEXT_FIELDS['Características']['BD_VALUE'],
-            'capacity': self.TEXT_FIELDS['Capacidad']['BD_VALUE'],
-            'speed': self.TEXT_FIELDS['Velocidad']['BD_VALUE'],
-            'certification': self.TEXT_FIELDS['Certificación']['BD_VALUE'],
-            'resolution': self.TEXT_FIELDS['Resolución']['BD_VALUE'],
-            'refresh': self.TEXT_FIELDS['Tasa de refresco']['BD_VALUE'],
-            'rate': self.TEXT_FIELDS['Calificación']['BD_VALUE'],
-            'selected': 0
-        }
+        element = {
+            self.TEXT_FIELDS[key]['BD_NAME']:
+            self.TEXT_FIELDS[key]['BD_VALUE']
+            for key in self.TEXT_FIELDS
+            }
+        
+        componente = self.db.to_database(element)
+        
+        # componente = {
+        #     'type_id': [
+        #         type.type_id
+        #         for type in self.db.Item_types
+        #         if type.name == self.TEXT_FIELDS['COMPONENTE']['BD_VALUE']
+        #         ][0],
+        #     'brand': self.TEXT_FIELDS['Marca']['BD_VALUE'],
+        #     'model': self.TEXT_FIELDS['Modelo']['BD_VALUE'],
+        #     'seller': self.TEXT_FIELDS['Tienda']['BD_VALUE'],
+        #     'price': self.TEXT_FIELDS['Precio']['BD_VALUE'],
+        #     'url': self.TEXT_FIELDS['URL']['BD_VALUE'],
+        #     'features': self.TEXT_FIELDS['Características']['BD_VALUE'],
+        #     'capacity': self.TEXT_FIELDS['Capacidad']['BD_VALUE'],
+        #     'speed': self.TEXT_FIELDS['Velocidad']['BD_VALUE'],
+        #     'certification': self.TEXT_FIELDS['Certificación']['BD_VALUE'],
+        #     'resolution': self.TEXT_FIELDS['Resolución']['BD_VALUE'],
+        #     'refresh': self.TEXT_FIELDS['Tasa de refresco']['BD_VALUE'],
+        #     'rate': self.TEXT_FIELDS['Calificación']['BD_VALUE'],
+        #     'selected': 0
+        # }
 
         self.db.registrar_componente(**componente)
         
@@ -198,26 +206,34 @@ class FormAgregar(ttk.Frame):
         )       
 
     def modificar_datos(self):
-        componente = {
-            'type_id': [
-                type.type_id
-                for type in self.db.Item_types
-                if type.name == self.TEXT_FIELDS['COMPONENTE']['BD_VALUE']
-                ][0],
-            'brand': self.TEXT_FIELDS['Marca']['BD_VALUE'],
-            'model': self.TEXT_FIELDS['Modelo']['BD_VALUE'],
-            'seller': self.TEXT_FIELDS['Tienda']['BD_VALUE'],
-            'price': self.TEXT_FIELDS['Precio']['BD_VALUE'],
-            'url': self.TEXT_FIELDS['URL']['BD_VALUE'],
-            'features': self.TEXT_FIELDS['Características']['BD_VALUE'],
-            'capacity': self.TEXT_FIELDS['Capacidad']['BD_VALUE'],
-            'speed': self.TEXT_FIELDS['Velocidad']['BD_VALUE'],
-            'certification': self.TEXT_FIELDS['Certificación']['BD_VALUE'],
-            'resolution': self.TEXT_FIELDS['Resolución']['BD_VALUE'],
-            'refresh': self.TEXT_FIELDS['Tasa de refresco']['BD_VALUE'],
-            'rate': self.TEXT_FIELDS['Calificación']['BD_VALUE'],
-            'selected': 0
-        }
+        element = {
+            self.TEXT_FIELDS[key]['BD_NAME']:
+            self.TEXT_FIELDS[key]['BD_VALUE']
+            for key in self.TEXT_FIELDS
+            }
+        
+        componente = self.db.to_database(element)
+
+        # componente = {
+        #     'type_id': [
+        #         type.type_id
+        #         for type in self.db.Item_types
+        #         if type.name == self.TEXT_FIELDS['COMPONENTE']['BD_VALUE']
+        #         ][0],
+        #     'brand': self.TEXT_FIELDS['Marca']['BD_VALUE'],
+        #     'model': self.TEXT_FIELDS['Modelo']['BD_VALUE'],
+        #     'seller': self.TEXT_FIELDS['Tienda']['BD_VALUE'],
+        #     'price': self.TEXT_FIELDS['Precio']['BD_VALUE'],
+        #     'url': self.TEXT_FIELDS['URL']['BD_VALUE'],
+        #     'features': self.TEXT_FIELDS['Características']['BD_VALUE'],
+        #     'capacity': self.TEXT_FIELDS['Capacidad']['BD_VALUE'],
+        #     'speed': self.TEXT_FIELDS['Velocidad']['BD_VALUE'],
+        #     'certification': self.TEXT_FIELDS['Certificación']['BD_VALUE'],
+        #     'resolution': self.TEXT_FIELDS['Resolución']['BD_VALUE'],
+        #     'refresh': self.TEXT_FIELDS['Tasa de refresco']['BD_VALUE'],
+        #     'rate': self.TEXT_FIELDS['Calificación']['BD_VALUE'],
+        #     'selected': 0
+        # }
         
         self.db.modificar_componente(self.item, **componente)
         

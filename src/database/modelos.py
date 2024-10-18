@@ -1,5 +1,5 @@
 from sqlalchemy import Column
-from sqlalchemy import String, Integer, ForeignKey, DECIMAL, Text, SmallInteger
+from sqlalchemy import String, Integer, ForeignKey, Numeric, Text, SmallInteger
 from sqlalchemy.orm import declarative_base, relationship
 
 Base = declarative_base()
@@ -20,7 +20,7 @@ class ComponentModel(Base):
     brand = Column(String, nullable=False)
     model = Column(String, nullable=False)  
     seller = Column(String(30), nullable=False)
-    price = Column(DECIMAL(5, 2), nullable=False)
+    price = Column(Numeric(5, 2, asdecimal=False), nullable=False)
     url = Column(String)
     features = Column(Text, nullable=False)
     capacity = Column(Integer)
@@ -28,7 +28,8 @@ class ComponentModel(Base):
     certification = Column(String)
     resolution = Column(String)
     refresh = Column(Integer)
-    rate = Column(DECIMAL(3, 2))
+    rate = Column(Numeric(3, 2, asdecimal=False))
     selected = Column(SmallInteger, nullable=False, default=0)
     
     item_type = relationship("ItemTypeModel", back_populates="items")
+    

@@ -32,14 +32,13 @@ class FormDisplay(ttk.Frame):
     
     def mostrar_items(self):
         self.configurar_treeview()             
-        
-        for index, componente in enumerate(self.db.Components):
+
+        index = 1
+        for component in self.db.Components:
             values = []
-            for columna in ComponentModel.__table__.columns:
-                if columna.foreign_keys:
-                    values += [componente.item_type.name]
-                else:
-                    values += [getattr(componente, columna.name)]
+            for key in component:
+                values += [component[key]]
+            
             values = tuple(values)
             
             self.treeview.insert(
@@ -49,6 +48,7 @@ class FormDisplay(ttk.Frame):
                 text='',
                 values=values
                 )
+            index += 1
         
     def configurar_treeview(self):
         self.configure_style()
