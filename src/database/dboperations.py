@@ -73,12 +73,12 @@ class DBOps():
                     dict[columna.name] = element.item_type.name
                 else:
                     dato = getattr(element, columna.name)
-                    dict[columna.name] = "" if not dato else dato
+                    dict[columna.name] = "" if dato==None else dato
             components += [dict]
                 
         return components
     
-    def to_database(self, element):     
+    def to_database(self, element):
         component = {}
         for key in element:
             if element[key] == "":

@@ -20,6 +20,7 @@ class FormMasterDesign(tk.Tk):
         self.paneles()
         self.controles_barra_superior()
         self.controles_menu_lateral()
+        self.panel_display()
 
     def config_window(self):
         # Configuración inicial de la ventana

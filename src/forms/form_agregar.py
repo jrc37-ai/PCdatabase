@@ -1,9 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
 
-from sqlalchemy.orm import Session
-
-from database.modelos import ComponentModel
 from config import *
 
 class FormAgregar(ttk.Frame):
@@ -88,11 +85,11 @@ class FormAgregar(ttk.Frame):
     def mostrar_resumen(self):
         for key in self.TEXT_FIELDS:
             self.TEXT_FIELDS[key]['ENTRY_VALUE'] = self.TEXT_FIELDS[key]['ENTRY'].get()
-            if len(self.TEXT_FIELDS[key]['ENTRY_VALUE']) == 0:
-                self.TEXT_FIELDS[key]['BD_VALUE'] = None
-            else:
-                self.TEXT_FIELDS[key]['BD_VALUE'] = self.TEXT_FIELDS[key]['ENTRY_VALUE']
-                
+            # if len(self.TEXT_FIELDS[key]['ENTRY_VALUE']) == 0:
+            #     self.TEXT_FIELDS[key]['BD_VALUE'] = None
+            # else:
+            #     self.TEXT_FIELDS[key]['BD_VALUE'] = self.TEXT_FIELDS[key]['ENTRY_VALUE']
+
         self.limpiar_panel(self.panel_principal)
         
         self.top_bar('RESUMEN')
@@ -163,7 +160,7 @@ class FormAgregar(ttk.Frame):
     def ingresar_datos(self):
         element = {
             self.TEXT_FIELDS[key]['BD_NAME']:
-            self.TEXT_FIELDS[key]['BD_VALUE']
+            self.TEXT_FIELDS[key]['ENTRY_VALUE']
             for key in self.TEXT_FIELDS
             }
         
@@ -208,7 +205,7 @@ class FormAgregar(ttk.Frame):
     def modificar_datos(self):
         element = {
             self.TEXT_FIELDS[key]['BD_NAME']:
-            self.TEXT_FIELDS[key]['BD_VALUE']
+            self.TEXT_FIELDS[key]['ENTRY_VALUE']
             for key in self.TEXT_FIELDS
             }
         

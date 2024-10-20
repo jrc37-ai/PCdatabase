@@ -4,13 +4,12 @@ from tkinter import ttk
 from sqlalchemy.orm import Session
 
 from forms.form_agregar import FormAgregar
-from database.modelos import ComponentModel
 from database.dboperations import DBOps
 from config import *
 
-class FormDisplay(ttk.Frame):
+class FormDisplay(FormAgregar, ttk.Frame):
     def __init__(self, panel_principal) -> None:
-        super().__init__(panel_principal)
+        # super().__init__(panel_principal)
         self.panel_principal = panel_principal
         self.db = DBOps()
         
@@ -69,14 +68,25 @@ class FormDisplay(ttk.Frame):
                                      xscrollcommand=x_scroll.set
                                      )
         
-        columnas = ['Item']
-        for columna in DATA_FIELDS:
-            columnas += [columna]
-        self.treeview['columns'] = tuple(columnas)
+        
+        fields = {field['BD_NAME']: key for key, field in DATA_FIELDS.items()}
+        self.columnas = []
+        for key in self.db.Components[0]:
+            if key in fields:
+                self.columnas += [fields[key]]
+            else:
+                self.columnas.append(key)
+        
+        self.treeview['columns'] = tuple(self.columnas)
+
+        # columnas = ['Item']
+        # for columna in DATA_FIELDS:
+        #     columnas += [columna]
+        # self.treeview['columns'] = tuple(columnas)
                     
         self.treeview.column('#0', width=0, stretch=tk.NO)
         self.treeview.heading('#0', text='')
-        for columna in columnas:
+        for columna in self.columnas:
             self.treeview.column(columna, anchor=tk.CENTER, width=120, stretch=tk.NO)
             self.treeview.heading(columna, text=columna)
         
@@ -157,25 +167,76 @@ class FormDisplay(ttk.Frame):
     
     def activar_panel_entradas(self):
         if self.item:
-            self.entradas = FormAgregar(panel_principal=self.panel_principal,
-                                        db_access=self.db)
-            self.entradas.fields_reset()
+            # self.entradas = FormAgregar(panel_principal=self.panel_principal,
+                                        # db_access=self.db)
+            self.fields_reset()
             
-            i = 1
-            for key in self.entradas.TEXT_FIELDS:
-                self.entradas.TEXT_FIELDS[key]['ENTRY_VALUE'] = self.item[i]
-                i += 1
+            seleccion = {
+                columna:item
+                for columna, item
+                in zip(self.columnas, self.item)
+                }
             
-            self.entradas.combobox = [
-                type.type_id-1
-                for type in self.db.Item_types
-                if type.name == self.entradas.TEXT_FIELDS['COMPONENTE']['ENTRY_VALUE']
-                ][0]
+            for key in self.TEXT_FIELDS:
+                self.TEXT_FIELDS[key]['ENTRY_VALUE'] = seleccion[key]
+
+            element = {
+                self.TEXT_FIELDS[key]['BD_NAME']:
+                self.TEXT_FIELDS[key]['ENTRY_VALUE']
+                for key in self.TEXT_FIELDS
+                }
+        
+            componente = self.db.to_database(element)
+            self.combobox = componente['type_id'] - 1
+
+            self.texto_agregar = 'MODIFICAR'
+            self.comando = self.modificar_datos
+            self.item = self.item[0]
+            self.panel_entradas()
+
+            # "COMPONENTE": {
+            #     "BD_NAME": "type_id",
+            #     "BD_VALUE": None,
+            #     "ENTRY_VALUE": "",
+            #     "LABEL": None,
+            #     "ENTRY": None
+            # },
+            # "Marca": {
+            #     "BD_NAME": "brand",
+            #     "BD_VALUE": None,
+            #     "ENTRY_VALUE": "",
+            #     "LABEL": None,
+            #     "ENTRY": None
+
+
+
+            # i = 1
+            # for key in self.TEXT_FIELDS:
+            #     self.TEXT_FIELDS[key]['ENTRY_VALUE'] = self.item[i]
+            #     i += 1
             
-        self.entradas.texto_agregar = 'MODIFICAR'
-        self.entradas.comando = self.entradas.modificar_datos
-        self.entradas.item = self.item[0]
-        self.entradas.panel_entradas()
+           
+
+
+        #     self.entradas = FormAgregar(panel_principal=self.panel_principal,
+        #                                 db_access=self.db)
+        #     self.entradas.fields_reset()
+            
+        #     i = 1
+        #     for key in self.entradas.TEXT_FIELDS:
+        #         self.entradas.TEXT_FIELDS[key]['ENTRY_VALUE'] = self.item[i]
+        #         i += 1
+            
+        #     self.entradas.combobox = [
+        #         type.type_id-1
+        #         for type in self.db.Item_types
+        #         if type.name == self.entradas.TEXT_FIELDS['COMPONENTE']['ENTRY_VALUE']
+        #         ][0]
+            
+        # self.entradas.texto_agregar = 'MODIFICAR'
+        # self.entradas.comando = self.entradas.modificar_datos
+        # self.entradas.item = self.item[0]
+        # self.entradas.panel_entradas()
             
     def eliminar_registro(self):        
         pass
