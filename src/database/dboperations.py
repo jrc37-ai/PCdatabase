@@ -20,19 +20,6 @@ class DBOps():
         for key in datos:
             setattr(componente, key, datos[key])
                
-        # componente.type_id = datos['type_id']
-        # componente.brand = datos['brand']
-        # componente.model = datos['model']
-        # componente.seller = datos['seller']
-        # componente.price = datos['price']
-        # componente.url = datos['url']
-        # componente.features = datos['features']
-        # componente.capacity = datos['capacity']
-        # componente.speed = datos['speed']
-        # componente.certification = datos['certification']
-        # componente.resolution = datos['resolution']
-        # componente.refresh = datos['refresh']
-        # componente.rate = datos['rate']
         componente.selected = 0
         
         with Session(self.engine) as session:
@@ -47,6 +34,14 @@ class DBOps():
                 setattr(componente, key, datos[key])
             
             session.commit()
+            
+    def eliminar_componente(self, item):
+        with Session(self.engine) as session:
+            componente = session.query(ComponentModel).filter_by(item_id=item).one()
+            if componente:
+                session.delete(componente)
+                session.commit()
+        
         
     def get_item_types(self) -> List[ItemTypeModel]:
         item_types: ItemTypeModel = None

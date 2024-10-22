@@ -85,11 +85,7 @@ class FormAgregar(ttk.Frame):
     def mostrar_resumen(self):
         for key in self.TEXT_FIELDS:
             self.TEXT_FIELDS[key]['ENTRY_VALUE'] = self.TEXT_FIELDS[key]['ENTRY'].get()
-            # if len(self.TEXT_FIELDS[key]['ENTRY_VALUE']) == 0:
-            #     self.TEXT_FIELDS[key]['BD_VALUE'] = None
-            # else:
-            #     self.TEXT_FIELDS[key]['BD_VALUE'] = self.TEXT_FIELDS[key]['ENTRY_VALUE']
-
+            
         self.limpiar_panel(self.panel_principal)
         
         self.top_bar('RESUMEN')
@@ -107,13 +103,13 @@ class FormAgregar(ttk.Frame):
                     bg=COLOR_TABLA_TITULO_FONDO,
                     width=20
                     )
-            label_resumen_campo.pack(side=tk.LEFT)
+            label_resumen_campo.pack(side=tk.LEFT, padx=10)
             
             label_resumen_dato.config(
                     fg=COLOR_TABLA_TEXTO,
                     font=("Helvetica", 12),
                     bg=COLOR_TABLA_TITULO_FONDO,
-                    width=20
+                    width=40
                     )
             label_resumen_dato.pack(side=tk.LEFT)
 
@@ -134,7 +130,7 @@ class FormAgregar(ttk.Frame):
             activeforeground=BOTON_ADD_TEXTO,
             command=self.panel_entradas
             )
-        self.boton_editar.pack(side=tk.LEFT)
+        self.boton_editar.pack(side=tk.LEFT)        
         self.combobox = [
             type.type_id-1
             for type in self.db.Item_types
@@ -165,32 +161,11 @@ class FormAgregar(ttk.Frame):
             }
         
         componente = self.db.to_database(element)
-        
-        # componente = {
-        #     'type_id': [
-        #         type.type_id
-        #         for type in self.db.Item_types
-        #         if type.name == self.TEXT_FIELDS['COMPONENTE']['BD_VALUE']
-        #         ][0],
-        #     'brand': self.TEXT_FIELDS['Marca']['BD_VALUE'],
-        #     'model': self.TEXT_FIELDS['Modelo']['BD_VALUE'],
-        #     'seller': self.TEXT_FIELDS['Tienda']['BD_VALUE'],
-        #     'price': self.TEXT_FIELDS['Precio']['BD_VALUE'],
-        #     'url': self.TEXT_FIELDS['URL']['BD_VALUE'],
-        #     'features': self.TEXT_FIELDS['Características']['BD_VALUE'],
-        #     'capacity': self.TEXT_FIELDS['Capacidad']['BD_VALUE'],
-        #     'speed': self.TEXT_FIELDS['Velocidad']['BD_VALUE'],
-        #     'certification': self.TEXT_FIELDS['Certificación']['BD_VALUE'],
-        #     'resolution': self.TEXT_FIELDS['Resolución']['BD_VALUE'],
-        #     'refresh': self.TEXT_FIELDS['Tasa de refresco']['BD_VALUE'],
-        #     'rate': self.TEXT_FIELDS['Calificación']['BD_VALUE'],
-        #     'selected': 0
-        # }
 
         self.db.registrar_componente(**componente)
         
         self.boton_editar.config(
-            text='NUEVO (+)',
+            text='NUEVO (+)'
             )
         
         self.fields_reset()
@@ -210,32 +185,12 @@ class FormAgregar(ttk.Frame):
             }
         
         componente = self.db.to_database(element)
-
-        # componente = {
-        #     'type_id': [
-        #         type.type_id
-        #         for type in self.db.Item_types
-        #         if type.name == self.TEXT_FIELDS['COMPONENTE']['BD_VALUE']
-        #         ][0],
-        #     'brand': self.TEXT_FIELDS['Marca']['BD_VALUE'],
-        #     'model': self.TEXT_FIELDS['Modelo']['BD_VALUE'],
-        #     'seller': self.TEXT_FIELDS['Tienda']['BD_VALUE'],
-        #     'price': self.TEXT_FIELDS['Precio']['BD_VALUE'],
-        #     'url': self.TEXT_FIELDS['URL']['BD_VALUE'],
-        #     'features': self.TEXT_FIELDS['Características']['BD_VALUE'],
-        #     'capacity': self.TEXT_FIELDS['Capacidad']['BD_VALUE'],
-        #     'speed': self.TEXT_FIELDS['Velocidad']['BD_VALUE'],
-        #     'certification': self.TEXT_FIELDS['Certificación']['BD_VALUE'],
-        #     'resolution': self.TEXT_FIELDS['Resolución']['BD_VALUE'],
-        #     'refresh': self.TEXT_FIELDS['Tasa de refresco']['BD_VALUE'],
-        #     'rate': self.TEXT_FIELDS['Calificación']['BD_VALUE'],
-        #     'selected': 0
-        # }
-        
+      
         self.db.modificar_componente(self.item, **componente)
         
         self.boton_editar.config(
-            text='VER TODO'
+            text='VER TODO',
+            command=self.ver_todo
             )
         
         self.fields_reset()
@@ -246,7 +201,22 @@ class FormAgregar(ttk.Frame):
             disabledforeground=BOTON_DISABLED_TEXTO,
             state=tk.DISABLED
         )       
-            
+    
+    def eliminar_datos(self):
+        self.db.eliminar_componente(self.item)
+        
+        self.boton_agregar.config(
+            text='ELIMINADO',
+            background=BOTON_ELIMINADO,
+            disabledforeground=BOTON_DISABLED_TEXTO,
+            state=tk.DISABLED
+        )
+    
+    def ver_todo(self):
+        from forms.form_display import FormDisplay
+        self.limpiar_panel(self.panel_principal)
+        FormDisplay(self.panel_principal)
+    
     def fields_reset(self):
          # Reiniciar los valores de los entry a None
         self.TEXT_FIELDS = DATA_FIELDS.copy()
