@@ -89,36 +89,38 @@ class FormDisplay(FormAgregar, ttk.Frame):
         x_scroll.config(command=self.treeview.xview)
     
     def configure_style(self):
-        style = ttk.Style()
-        style.theme_use("clam")
-        style.configure('Treeview',
+        self.style = ttk.Style()
+        self.style.theme_use("clam")
+        self.style.configure('Treeview',
                         background=COLOR_TABLA_TEXTO_FONDO,  # Fondo oscuro para el Treeview
                         foreground=COLOR_TABLA_TEXTO,  # Texto blanco para el Treeview
                         fieldbackground=COLOR_TABLA_LIENZO,
                         font=('Arial', 8))  # Fondo del área de entrada
                         
         # Configura el estilo de los encabezados del Treeview
-        style.configure('Treeview.Heading',
+        self.style.configure('Treeview.Heading',
                         background=COLOR_TABLA_TITULO_FONDO,  # Fondo de los encabezados (gris oscuro)
                         foreground=COLOR_TABLA_TITULO_TEXTO,  # Texto de los encabezados (gris claro)
                         font=('Arial', 8))
                         
         # Mapear colores cuando se selecciona
-        style.map('Treeview',
+        self.style.map('Treeview',
                   background=[('selected', COLOR_TABLA_SELECCION)],  # Fondo de las filas seleccionadas
                   foreground=[('selected', COLOR_TABLA_SELECCION_TEXTO)])  # Texto de las filas seleccionadas
         
-        style.map('Treeview.Heading',
+        self.style.map('Treeview.Heading',
                   background=[('active', COLOR_TABLA_TITULO_SEL)],  # Fondo de los encabezados cuando se activa
                   foreground=[('active', COLOR_TABLA_TITULO_TEXSEL)])  # Texto de los encabezados cuando se activa
         
     def seleccion_linea(self, event):                
         self.btn_editar.config(state='normal')
         self.btn_eliminar.config(state='normal')
+        self.btn_marcar.config(state='normal')
         
-        seleccion = event.widget.selection()
-        if seleccion:
-            self.linea = event.widget.item(seleccion[0], 'values')
+        self.seleccion = event.widget.selection()
+        if self.seleccion:
+            self.linea = event.widget.item(self.seleccion[0], 'values')
+            self.sel = event.widget.item(self.seleccion[0], tags='seleccion')
     
     def mostrar_botones(self):
         self.btn_eliminar = tk.Button(self.labelBarra)
@@ -156,6 +158,24 @@ class FormDisplay(FormAgregar, ttk.Frame):
             state='disabled'
             )
         self.btn_editar.pack(side=tk.RIGHT, pady=10, padx=10)
+        
+        self.btn_marcar = tk.Button(self.labelBarra)
+        self.btn_marcar.config(
+            text='Marcar',
+            font=('Arial', 10, 'bold'),
+            borderwidth=4,
+            width=10,
+            relief='flat',
+            overrelief='groove',
+            background=BOTON_ADD_FONDO,
+            foreground=BOTON_ADD_TEXTO,
+            activebackground=BOTON_ADD_FONDO,
+            activeforeground=BOTON_ADD_TEXTO,
+            disabledforeground=COLOR_BARRA_TABLA,
+            command=self.marcar_seleccion,
+            state='disabled'
+            )
+        self.btn_marcar.pack(side=tk.RIGHT, pady=10, padx=10)
     
     def activar_panel_entradas(self):
         if self.linea:
@@ -179,10 +199,15 @@ class FormDisplay(FormAgregar, ttk.Frame):
             self.item = self.linea[0]
             self.mostrar_resumen()
             self.boton_editar.config(
-                text='VER TODO',
+                text='ATRÁS',
                 command=self.ver_todo
             )
         
+    def marcar_seleccion(self):
+        self.style.map("Treeview", background=[('selected', 'lightgreen')], foreground=[('selected', 'black')])
+        self.style.configure("seleccion", background="lightyellow")  # Color permanente
+                
+    
     def seleccionado(self):
         self.fields_reset()
             
