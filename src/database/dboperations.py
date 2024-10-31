@@ -41,8 +41,15 @@ class DBOps():
             if componente:
                 session.delete(componente)
                 session.commit()
-        
-        
+    
+    def marcar_componente(self, item, selected):
+        with Session(self.engine) as session:
+            componente = session.query(ComponentModel).filter_by(item_id=item).one()
+            
+            setattr(componente, 'selected', selected)
+
+            session.commit()
+            
     def get_item_types(self) -> List[ItemTypeModel]:
         item_types: ItemTypeModel = None
         with Session(self.engine) as session:
@@ -59,6 +66,17 @@ class DBOps():
             
         return components
 
+    def get_same_type(self, type_id) -> List[ComponentModel]:
+        elements: List[ComponentModel] = []
+        with Session(self.engine) as session:
+            elements = session.query(ComponentModel).filter_by(
+                type_id=type_id).options(
+                    joinedload(ComponentModel.item_type)
+                    ).all()
+        same_type = self.from_database(elements)
+        
+        return same_type
+    
     def from_database(self, elements):
         components = []
         for element in elements:
@@ -85,3 +103,4 @@ class DBOps():
                 component[key] = element[key]
         
         return component        
+    

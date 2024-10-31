@@ -7,7 +7,6 @@ from config import *
 
 class FormDisplay(FormAgregar, ttk.Frame):
     def __init__(self, panel_principal) -> None:
-        # super().__init__(panel_principal)
         self.panel_principal = panel_principal
         self.db = DBOps()
         
@@ -31,10 +30,15 @@ class FormDisplay(FormAgregar, ttk.Frame):
         self.configurar_treeview()             
 
         index = 1
-        for component in self.db.Components:
+        
+        lista_ordenada = sorted(self.db.Components, key=lambda x: (x['type_id'], -x['selected']))
+
+        for component in lista_ordenada:
             values = []
             for key in component:
                 values += [component[key]]
+            
+            highlight = ('highlight',) if component['selected'] == 1 else ('normal',)
             
             values = tuple(values)
             
@@ -43,6 +47,7 @@ class FormDisplay(FormAgregar, ttk.Frame):
                 index=index,
                 iid=index,
                 text='',
+                tags=highlight,
                 values=values
                 )
             index += 1
@@ -85,6 +90,9 @@ class FormDisplay(FormAgregar, ttk.Frame):
         self.treeview.pack(side=tk.TOP, expand=True, fill=tk.BOTH)
         self.treeview.bind("<<TreeviewSelect>>", self.seleccion_linea)
         
+        self.treeview.tag_configure("highlight", background="lightgreen") # Color de fondo para elementos marcados
+        self.treeview.tag_configure("normal", background=COLOR_TABLA_TEXTO_FONDO) # Color de fondo para elementos no marcados
+        
         y_scroll.config(command=self.treeview.yview)
         x_scroll.config(command=self.treeview.xview)
     
@@ -120,7 +128,7 @@ class FormDisplay(FormAgregar, ttk.Frame):
         self.seleccion = event.widget.selection()
         if self.seleccion:
             self.linea = event.widget.item(self.seleccion[0], 'values')
-            self.sel = event.widget.item(self.seleccion[0], tags='seleccion')
+            # self.sel = event.widget.item(self.seleccion[0], tags='seleccion')
     
     def mostrar_botones(self):
         self.btn_eliminar = tk.Button(self.labelBarra)
@@ -176,6 +184,8 @@ class FormDisplay(FormAgregar, ttk.Frame):
             state='disabled'
             )
         self.btn_marcar.pack(side=tk.RIGHT, pady=10, padx=10)
+        
+        self.selected_items = {} ###########################################
     
     def activar_panel_entradas(self):
         if self.linea:
@@ -204,9 +214,15 @@ class FormDisplay(FormAgregar, ttk.Frame):
             )
         
     def marcar_seleccion(self):
-        self.style.map("Treeview", background=[('selected', 'lightgreen')], foreground=[('selected', 'black')])
-        self.style.configure("seleccion", background="lightyellow")  # Color permanente
-                
+        if self.linea:
+            self.seleccionado()     
+            same_type = self.db.get_same_type(self.combobox + 1)
+            for row in same_type:
+                self.db.marcar_componente(row['item_id'], selected=0)
+            
+            self.db.marcar_componente(self.linea[0], selected=1)
+
+            self.ver_todo()                
     
     def seleccionado(self):
         self.fields_reset()
