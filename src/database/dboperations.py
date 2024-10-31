@@ -76,6 +76,17 @@ class DBOps():
         same_type = self.from_database(elements)
         
         return same_type
+
+    def get_selected(self) -> List[ComponentModel]:
+        elements: List[ComponentModel] = []
+        with Session(self.engine) as session:
+            elements = session.query(ComponentModel).filter_by(
+                selected=1).options(
+                    joinedload(ComponentModel.item_type)
+                    ).all()
+        components = self.from_database(elements)
+            
+        return components
     
     def from_database(self, elements):
         components = []

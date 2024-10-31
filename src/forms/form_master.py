@@ -7,6 +7,7 @@ import util.util_imagen as util_imagen
 from forms.form_agregar import FormAgregar
 from forms.form_info import FormInfo
 from forms.form_display import FormDisplay
+from forms.form_seleccion import FormSelect
 from forms.form_imagenes import FormImagen
 
 from database.dboperations import DBOps
@@ -53,20 +54,32 @@ class FormMasterDesign(tk.Tk):
         alto_menu = 2
 
         self.buttonAdd = tk.Button(self.menu_lateral)
-        self.buttonNewType = tk.Button(self.menu_lateral)
-        self.buttonInfo = tk.Button(self.menu_lateral)
         self.buttonDisplay = tk.Button(self.menu_lateral)
         self.buttonBuild = tk.Button(self.menu_lateral)
+        self.buttonInfo = tk.Button(self.menu_lateral)
 
         buttons_info = [
             ("Componente (+) ", self.buttonAdd, self.panel_agregar),
             ("Ver TODO", self.buttonDisplay, self.panel_display),
-            ("Info", self.buttonInfo, self.abrir_panel_info),
             ("Ver SELECCIÓN ", self.buttonBuild, self.panel_select)
         ]
 
         for text, button, comando in buttons_info:
             self.configurar_boton_menu(button, text, ancho_menu, alto_menu, comando)
+            
+        self.buttonInfo.config(
+            text="( i )",
+            anchor='center',
+            font=('Helvetica', 12),
+            bd=0,
+            bg=COLOR_MENU_LATERAL,
+            fg='white',
+            width=ancho_menu,
+            height=alto_menu, 
+            command=self.abrir_panel_info
+            )
+        self.buttonInfo.pack(side=tk.BOTTOM)
+        self.bind_hover_events(self.buttonInfo)
         
     def configurar_boton_menu(self, button, text, ancho_menu, alto_menu, comando):
         button.config(text=text,
@@ -108,7 +121,8 @@ class FormMasterDesign(tk.Tk):
     
     def panel_select(self):
         self.limpiar_panel(self.cuerpo_principal)
-        FormImagen(self.cuerpo_principal, self.img_add)
+        # FormImagen(self.cuerpo_principal, self.img_add)
+        FormSelect(self.cuerpo_principal)
         
     # def panel_edit(self):
     #     self.limpiar_panel(self.cuerpo_principal)

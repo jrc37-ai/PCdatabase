@@ -13,23 +13,26 @@ class FormAgregar(ttk.Frame):
         self.texto_agregar = 'AGREGAR'
         self.comando = self.ingresar_datos
         self.fields_reset()
-        self.top_bar()
         self.panel_entradas()
 
     def top_bar(self, text='AGREGAR COMPONENTE'):
         self.barra_superior = tk.Frame(self.panel_principal)
         self.barra_superior.pack(side=tk.TOP, fill=tk.X, expand=False)
+        
         self.label_barra_superior = tk.Label(self.barra_superior, text=text)
         self.label_barra_superior.config(
             fg="#fff",
-            font=("Helvetica", 13, 'bold'),
+            font=("Helvetica", 14, 'bold'),
             bg=COLOR_BARRA_TABLA,
-            height=3
+            height=2,
+            anchor=tk.W,
+            padx=20
         )
-        self.label_barra_superior.pack(side=tk.TOP, fill="x", expand=False)
+        self.label_barra_superior.pack(side=tk.LEFT, fill="x", expand=True)
         
     def panel_entradas(self):
         self.limpiar_panel(self.panel_principal)
+        self.top_bar()
         
         self.info_entry = tk.Frame(self.panel_principal, bg=COLOR_CUERPO_PRINCIPAL)
         self.info_entry.pack(expand=False, pady=10)
