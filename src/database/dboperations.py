@@ -1,9 +1,10 @@
 from typing import List
 
 from sqlalchemy import create_engine
-from sqlalchemy.orm import Session, joinedload
+from sqlalchemy.orm import Session
 
-from database.modelos import ItemTypeModel, ComponentModel
+from database.modelos import ComponentModel
+from config import *
 
 class DBOps():
     def __init__(self) -> None:
@@ -11,8 +12,44 @@ class DBOps():
         self.database = 'sqlite:///database//PCdb.sqlite3'
         self.engine = create_engine(self.database, echo=True)
         
-        self.Item_types = self.get_item_types()
         self.Components = self.get_components()
+
+    def get_components(self) -> List[ComponentModel]:
+        elements: List[ComponentModel] = []
+        with Session(self.engine) as session:
+            elements = session.query(ComponentModel).all()
+        components = self.from_database(elements)
+            
+        return components
+    
+    def from_database(self, elements):
+        components = []
+        
+        for element in elements:
+            FIELDS = DATA_FIELDS.copy()
+            for key in FIELDS:
+                FIELDS[key] = DATA_FIELDS[key].copy()
+                dato = getattr(element, key)
+                FIELDS[key]['BD_VALUE'] = dato
+                if dato is not None:
+                    FIELDS[key]['FORM_VALUE'] = dato
+            components += [FIELDS]
+                
+        return components
+    
+    def to_database(self, element):
+        component = {}
+        for key in element:
+            if element[key] == "":
+                component[key] = None
+            elif element[key] in [obj.name for obj in self.Item_types]:
+                component[key] = [obj.type_id for obj in self.Item_types
+                                  if obj.name==element[key]][0]
+            else:
+                component[key] = element[key]
+        
+        return component        
+
     
     def registrar_componente(self, **datos):
         componente = ComponentModel()
@@ -49,69 +86,6 @@ class DBOps():
             setattr(componente, 'selected', selected)
 
             session.commit()
-            
-    def get_item_types(self) -> List[ItemTypeModel]:
-        item_types: ItemTypeModel = None
-        with Session(self.engine) as session:
-            item_types = session.query(ItemTypeModel).all()
-        return item_types
     
-    def get_components(self) -> List[ComponentModel]:
-        elements: List[ComponentModel] = []
-        with Session(self.engine) as session:
-            elements = session.query(ComponentModel).options(
-                joinedload(ComponentModel.item_type)
-                ).all()
-        components = self.from_database(elements)
-            
-        return components
-
-    def get_same_type(self, type_id) -> List[ComponentModel]:
-        elements: List[ComponentModel] = []
-        with Session(self.engine) as session:
-            elements = session.query(ComponentModel).filter_by(
-                type_id=type_id).options(
-                    joinedload(ComponentModel.item_type)
-                    ).all()
-        same_type = self.from_database(elements)
-        
-        return same_type
-
-    def get_selected(self) -> List[ComponentModel]:
-        elements: List[ComponentModel] = []
-        with Session(self.engine) as session:
-            elements = session.query(ComponentModel).filter_by(
-                selected=1).options(
-                    joinedload(ComponentModel.item_type)
-                    ).all()
-        components = self.from_database(elements)
-            
-        return components
     
-    def from_database(self, elements):
-        components = []
-        for element in elements:
-            dict = {}
-            for columna in ComponentModel.__table__.columns:
-                if columna.foreign_keys:
-                    dict[columna.name] = element.item_type.name
-                else:
-                    dato = getattr(element, columna.name)
-                    dict[columna.name] = "" if dato==None else dato
-            components += [dict]
-                
-        return components
-    
-    def to_database(self, element):
-        component = {}
-        for key in element:
-            if element[key] == "":
-                component[key] = None
-            elif element[key] in [obj.name for obj in self.Item_types]:
-                component[key] = [obj.type_id for obj in self.Item_types
-                                  if obj.name==element[key]][0]
-            else:
-                component[key] = element[key]
-        
-        return component        
     

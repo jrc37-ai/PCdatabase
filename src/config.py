@@ -19,95 +19,210 @@ BOTON_ELIMINADO = "#f83703"
 BOTON_DISABLED_TEXTO = "#ffffff"
 
 DATA_FIELDS = {
-    "COMPONENTE": {
-        "BD_NAME": "type_id",
+    "item_id": {
+        "FORM_NAME": "ITEM",
         "BD_VALUE": None,
+        "FORM_VALUE": "",
         "ENTRY_VALUE": "",
         "LABEL": None,
         "ENTRY": None
     },
-    "Marca": {
-        "BD_NAME": "brand",
+    "category": {
+        "FORM_NAME": "CATEGORÍA",
         "BD_VALUE": None,
+        "FORM_VALUE": "",
         "ENTRY_VALUE": "",
         "LABEL": None,
         "ENTRY": None
     },
-    "Modelo": {
-        "BD_NAME": "model",
+    "brand": {
+        "FORM_NAME": "MARCA",
         "BD_VALUE": None,
+        "FORM_VALUE": "",
         "ENTRY_VALUE": "",
         "LABEL": None,
         "ENTRY": None
     },
-    "Tienda": {
-        "BD_NAME": "seller",
+    "model": {
+        "FORM_NAME": "MODELO",
         "BD_VALUE": None,
+        "FORM_VALUE": "",
         "ENTRY_VALUE": "",
         "LABEL": None,
         "ENTRY": None
     },
-    "Precio": {
-        "BD_NAME": "price",
+    "price": {
+        "FORM_NAME": "PRECIO",
         "BD_VALUE": None,
+        "FORM_VALUE": "",
         "ENTRY_VALUE": "",
         "LABEL": None,
         "ENTRY": None
     },
-    "Capacidad": {
-        "BD_NAME": "capacity",
+    "seller": {
+        "FORM_NAME": "TIENDA",
         "BD_VALUE": None,
+        "FORM_VALUE": "",
         "ENTRY_VALUE": "",
         "LABEL": None,
         "ENTRY": None
     },
-    "Velocidad": {
-        "BD_NAME": "speed",
+    "capacity": {
+        "FORM_NAME": "CAPACIDAD",
         "BD_VALUE": None,
+        "FORM_VALUE": "",
         "ENTRY_VALUE": "",
         "LABEL": None,
         "ENTRY": None
     },
-    "Certificación": {
-        "BD_NAME": "certification",
+    "frequency": {
+        "FORM_NAME": "FRECUENCIA",
         "BD_VALUE": None,
+        "FORM_VALUE": "",
         "ENTRY_VALUE": "",
         "LABEL": None,
         "ENTRY": None
     },
-    "Resolución": {
-        "BD_NAME": "resolution",
+    "resolution": {
+        "FORM_NAME": "RESOLUCIÓN",
         "BD_VALUE": None,
+        "FORM_VALUE": "",
         "ENTRY_VALUE": "",
         "LABEL": None,
         "ENTRY": None
     },
-    "Tasa de refresco": {
-        "BD_NAME": "refresh",
+    "features": {
+        "FORM_NAME": "CARACTERÍSTICAS",
         "BD_VALUE": None,
+        "FORM_VALUE": "",
         "ENTRY_VALUE": "",
         "LABEL": None,
         "ENTRY": None
     },
-    "Calificación": {
-        "BD_NAME": "rate",
+    "rate": {
+        "FORM_NAME": "CALIFICACIÓN",
         "BD_VALUE": None,
+        "FORM_VALUE": "",
         "ENTRY_VALUE": "",
         "LABEL": None,
         "ENTRY": None
     },
-    "URL": {
-        "BD_NAME": "url",
+    "url": {
+        "FORM_NAME": "URL",
         "BD_VALUE": None,
+        "FORM_VALUE": "",
         "ENTRY_VALUE": "",
         "LABEL": None,
         "ENTRY": None
     },
-    "Características": {
-        "BD_NAME": "features",
+    "date": {
+        "FORM_NAME": "FECHA",
         "BD_VALUE": None,
+        "FORM_VALUE": "",
+        "ENTRY_VALUE": "",
+        "LABEL": None,
+        "ENTRY": None
+    },
+    "selected": {
+        "FORM_NAME": "SEL",
+        "BD_VALUE": None,
+        "FORM_VALUE": "",
         "ENTRY_VALUE": "",
         "LABEL": None,
         "ENTRY": None
     }
 }
+
+# DATA_FIELDS = {
+#     "COMPONENTE": {
+#         "BD_NAME": "type_id",
+#         "BD_VALUE": None,
+#         "ENTRY_VALUE": "",
+#         "LABEL": None,
+#         "ENTRY": None
+#     },
+#     "Marca": {
+#         "BD_NAME": "brand",
+#         "BD_VALUE": None,
+#         "ENTRY_VALUE": "",
+#         "LABEL": None,
+#         "ENTRY": None
+#     },
+#     "Modelo": {
+#         "BD_NAME": "model",
+#         "BD_VALUE": None,
+#         "ENTRY_VALUE": "",
+#         "LABEL": None,
+#         "ENTRY": None
+#     },
+#     "Tienda": {
+#         "BD_NAME": "seller",
+#         "BD_VALUE": None,
+#         "ENTRY_VALUE": "",
+#         "LABEL": None,
+#         "ENTRY": None
+#     },
+#     "Precio": {
+#         "BD_NAME": "price",
+#         "BD_VALUE": None,
+#         "ENTRY_VALUE": "",
+#         "LABEL": None,
+#         "ENTRY": None
+#     },
+#     "Capacidad": {
+#         "BD_NAME": "capacity",
+#         "BD_VALUE": None,
+#         "ENTRY_VALUE": "",
+#         "LABEL": None,
+#         "ENTRY": None
+#     },
+#     "Velocidad": {
+#         "BD_NAME": "speed",
+#         "BD_VALUE": None,
+#         "ENTRY_VALUE": "",
+#         "LABEL": None,
+#         "ENTRY": None
+#     },
+#     "Certificación": {
+#         "BD_NAME": "certification",
+#         "BD_VALUE": None,
+#         "ENTRY_VALUE": "",
+#         "LABEL": None,
+#         "ENTRY": None
+#     },
+#     "Resolución": {
+#         "BD_NAME": "resolution",
+#         "BD_VALUE": None,
+#         "ENTRY_VALUE": "",
+#         "LABEL": None,
+#         "ENTRY": None
+#     },
+#     "Tasa de refresco": {
+#         "BD_NAME": "refresh",
+#         "BD_VALUE": None,
+#         "ENTRY_VALUE": "",
+#         "LABEL": None,
+#         "ENTRY": None
+#     },
+#     "Calificación": {
+#         "BD_NAME": "rate",
+#         "BD_VALUE": None,
+#         "ENTRY_VALUE": "",
+#         "LABEL": None,
+#         "ENTRY": None
+#     },
+#     "URL": {
+#         "BD_NAME": "url",
+#         "BD_VALUE": None,
+#         "ENTRY_VALUE": "",
+#         "LABEL": None,
+#         "ENTRY": None
+#     },
+#     "Características": {
+#         "BD_NAME": "features",
+#         "BD_VALUE": None,
+#         "ENTRY_VALUE": "",
+#         "LABEL": None,
+#         "ENTRY": None
+#     }
+# }

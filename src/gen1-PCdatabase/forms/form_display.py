@@ -1,16 +1,13 @@
 import tkinter as tk
 from tkinter import ttk
 
-import util.util_imagen as util_imagen
 from forms.form_agregar import FormAgregar
-
 from database.dboperations import DBOps
 from config import *
 
 class FormDisplay(FormAgregar, ttk.Frame):
     def __init__(self, panel_principal) -> None:
         self.panel_principal = panel_principal
-        self.img_add = util_imagen.leer_imagen("logo.jpg", (800,500))
         self.db = DBOps()
         
         self.barra_superior = tk.Frame(self.panel_principal)
@@ -26,25 +23,18 @@ class FormDisplay(FormAgregar, ttk.Frame):
             padx=20
         )
         self.labelBarra.pack(side=tk.LEFT, fill=tk.X, expand=True)
-        
-        if len(self.db.Components) == 0:
-            self.labelnodata = tk.Label(
-                self.panel_principal,
-                text="AÚN NO HAY REGISTROS EN LA BASE DE DATOS",
-                font=("Helvetica", 12, 'italic'),
-                pady=20,
-                anchor=tk.N
-            )
-            self.labelnodata.pack(side=tk.TOP, fill=tk.X)
-        else:
-            self.mostrar_botones()
-            self.mostrar_items()
+        self.mostrar_botones()
+        self.mostrar_items()
     
     def mostrar_items(self):
         self.configurar_treeview()             
 
-        index = 1        
-        lista_ordenada = sorted(self.db.Components, key=lambda x: (x['type_id'], -x['selected']))
+        index = 1
+        
+        if len(self.db.Components) > 1:
+            lista_ordenada = sorted(self.db.Components, key=lambda x: (x['type_id'], -x['selected']))
+        else:
+            lista_ordenada = self.db.Components
 
         for component in lista_ordenada:
             values = []
@@ -84,8 +74,14 @@ class FormDisplay(FormAgregar, ttk.Frame):
                                      xscrollcommand=x_scroll.set
                                      )
         
-        self.columnas = [key['FORM_NAME'] for key in DATA_FIELDS]
-                
+        fields = {field['BD_NAME']: key for key, field in DATA_FIELDS.items()}
+        self.columnas = []
+        for key in self.db.Components[0]:
+            if key in fields:
+                self.columnas += [fields[key]]
+            else:
+                self.columnas.append(key)
+        
         self.treeview['columns'] = tuple(self.columnas)
                     
         self.treeview.column('#0', width=0, stretch=tk.NO)

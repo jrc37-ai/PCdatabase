@@ -1,4 +1,5 @@
 import tkinter as tk
+from config import *
 
 import util.util_ventana as util_ventana
 import util.util_imagen as util_imagen
@@ -9,14 +10,13 @@ from forms.form_display import FormDisplay
 from forms.form_seleccion import FormSelect
 from forms.form_imagenes import FormImagen
 
-# from database.dboperations import DBOps
-from config import *
+from database.dboperations import DBOps
 
 class FormMasterDesign(tk.Tk):
     def __init__(self):
         super().__init__()
         self.img_add = util_imagen.leer_imagen("logo.jpg", (800,500))
-        # self.db_access = DBOps()
+        self.db_access = DBOps()
         self.config_window()
         self.paneles()
         self.controles_barra_superior()
@@ -108,13 +108,13 @@ class FormMasterDesign(tk.Tk):
         for widget in panel.winfo_children():
             widget.destroy()
     
+    def panel_agregar(self):
+        self.limpiar_panel(self.cuerpo_principal)
+        FormAgregar(self.cuerpo_principal, self.db_access)
+    
     def panel_display(self):
         self.limpiar_panel(self.cuerpo_principal)
         FormDisplay(self.cuerpo_principal)
-    
-    def panel_agregar(self):
-        self.limpiar_panel(self.cuerpo_principal)
-        FormAgregar(self.cuerpo_principal)
     
     def abrir_panel_info(self):
         FormInfo()

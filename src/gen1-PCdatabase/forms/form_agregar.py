@@ -1,16 +1,14 @@
 import tkinter as tk
 from tkinter import ttk
 
-from database.dboperations import DBOps
-
 from config import *
 
 class FormAgregar(ttk.Frame):
-    def __init__(self, panel_principal) -> None:
+    def __init__(self, panel_principal, db_access) -> None:
         super().__init__(panel_principal)
         self.field_entries = {}
         self.panel_principal = panel_principal
-        self.db = DBOps()
+        self.db = db_access
         self.item = None
         self.texto_agregar = 'AGREGAR'
         self.comando = self.ingresar_datos
@@ -62,13 +60,19 @@ class FormAgregar(ttk.Frame):
             self.label_info_entry = tk.Frame(self.info_entry, bg=COLOR_CUERPO_PRINCIPAL)
             self.label_info_entry.pack(side=tk.TOP, fill=tk.X, pady=1)
 
-            font = ("Helvetica", 12)
-            self.TEXT_FIELDS[key]['ENTRY'] = ttk.Entry(self.label_info_entry,
-                                    style=ttk.Style().theme_use('xpnative'),
-                                    width=60,
-                                    font=('Arial',12)
-                                    )
-            self.TEXT_FIELDS[key]['ENTRY'].insert(0,self.TEXT_FIELDS[key]['ENTRY_VALUE'])
+            if key in ['COMPONENTE']:
+                font = ("Helvetica", 12, 'bold')
+                self.TEXT_FIELDS[key]['ENTRY'] = ttk.Combobox(self.label_info_entry, width=30, font=('Arial', 12))
+                self.TEXT_FIELDS[key]['ENTRY']['values'] = [type.name for type in self.db.Item_types]
+                self.TEXT_FIELDS[key]['ENTRY'].set(self.TEXT_FIELDS[key]['ENTRY']['values'][self.combobox])
+            else:
+                font = ("Helvetica", 12)
+                self.TEXT_FIELDS[key]['ENTRY'] = ttk.Entry(self.label_info_entry,
+                                        style=ttk.Style().theme_use('xpnative'),
+                                        width=60,
+                                        font=('Arial',12)
+                                        )
+                self.TEXT_FIELDS[key]['ENTRY'].insert(0,self.TEXT_FIELDS[key]['ENTRY_VALUE'])
             
             self.TEXT_FIELDS[key]['LABEL'] = tk.Label(self.label_info_entry, text=key)
             self.TEXT_FIELDS[key]['LABEL'].config(
