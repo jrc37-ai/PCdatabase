@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+from datetime import date
 
 from database.dboperations import DBOps
 
@@ -57,27 +58,53 @@ class FormAgregar(ttk.Frame):
             )
         self.boton_continuar.pack(side=tk.TOP, pady=10)
         
-    def mostrar_formulario(self):
+    def mostrar_formulario(self):       
         for key in self.TEXT_FIELDS:
+            
             self.label_info_entry = tk.Frame(self.info_entry, bg=COLOR_CUERPO_PRINCIPAL)
             self.label_info_entry.pack(side=tk.TOP, fill=tk.X, pady=1)
-
-            font = ("Helvetica", 12)
+          
+            style = ttk.Style()
+            style.theme_settings("xpnative", {
+                "TEntry": {
+                    "configure": {
+                        'background': 'red'
+                    },
+                    "map": {
+                        "background": [('disabled', 'red'), ('focus', 'red')],
+                        "foreground": [('disabled', "red"), ('focus', 'red')],
+                        "highlightcolor": [('disabled', "red"), ('focus', 'red')],
+                        "relief": [('disabled', "red"), ('focus', 'red')]
+                        }
+                    }
+                })   
+            
+            style.theme_use("xpnative")    
+          
             self.TEXT_FIELDS[key]['ENTRY'] = ttk.Entry(self.label_info_entry,
-                                    style=ttk.Style().theme_use('xpnative'),
                                     width=60,
                                     font=('Arial',12)
                                     )
-            self.TEXT_FIELDS[key]['ENTRY'].insert(0,self.TEXT_FIELDS[key]['ENTRY_VALUE'])
             
-            self.TEXT_FIELDS[key]['LABEL'] = tk.Label(self.label_info_entry, text=key)
+            if key in ['date']:
+                self.TEXT_FIELDS[key]['ENTRY'].insert(0, date.today())
+                
+                self.TEXT_FIELDS[key]['ENTRY'].config(state=tk.DISABLED)
+            else:
+                self.TEXT_FIELDS[key]['ENTRY'].insert(0, self.TEXT_FIELDS[key]['ENTRY_VALUE'])
+            
+            text = self.TEXT_FIELDS[key]['FORM_NAME']
+            self.TEXT_FIELDS[key]['LABEL'] = tk.Label(self.label_info_entry, text=text)
             self.TEXT_FIELDS[key]['LABEL'].config(
                 fg=COLOR_TABLA_TEXTO,
-                font=font,
+                font=("Helvetica", 12),
                 bg=COLOR_TABLA_TITULO_FONDO,
                 width=20
                 )              
-               
+            
+            if key in ['item_id', 'selected']:
+                continue
+            
             self.TEXT_FIELDS[key]['LABEL'].pack(side=tk.LEFT)
             self.TEXT_FIELDS[key]['ENTRY'].pack(side=tk.LEFT, padx=10)
         
@@ -86,15 +113,17 @@ class FormAgregar(ttk.Frame):
             self.TEXT_FIELDS[key]['ENTRY_VALUE'] = self.TEXT_FIELDS[key]['ENTRY'].get()
             
         self.limpiar_panel(self.panel_principal)
-        
         self.top_bar('RESUMEN')
         
         for key in self.TEXT_FIELDS:
             frame_resumen = tk.Frame(self.panel_principal, bg=COLOR_CUERPO_PRINCIPAL)
             frame_resumen.pack(side=tk.TOP, pady=1)
 
-            label_resumen_campo = tk.Label(frame_resumen, text=key)
+            label_resumen_campo = tk.Label(frame_resumen, text=self.TEXT_FIELDS[key]['FORM_NAME'])
             label_resumen_dato = tk.Label(frame_resumen, text=self.TEXT_FIELDS[key]['ENTRY_VALUE'])
+            
+            if key in ['item_id', 'selected']:
+                continue
             
             label_resumen_campo.config(
                     fg=COLOR_TABLA_TEXTO,
@@ -130,12 +159,7 @@ class FormAgregar(ttk.Frame):
             command=self.panel_entradas
             )
         self.boton_editar.pack(side=tk.LEFT)        
-        self.combobox = [
-            type.type_id-1
-            for type in self.db.Item_types
-            if type.name == self.TEXT_FIELDS['COMPONENTE']['ENTRY_VALUE']
-            ][0]
-               
+        
         self.boton_agregar = tk.Button(frame_botones)
         self.boton_agregar.config(
             text=self.texto_agregar, # AGREGAR O MODIFICAR
@@ -153,15 +177,12 @@ class FormAgregar(ttk.Frame):
         self.boton_agregar.pack(side=tk.LEFT, padx=10)
         
     def ingresar_datos(self):
-        element = {
-            self.TEXT_FIELDS[key]['BD_NAME']:
-            self.TEXT_FIELDS[key]['ENTRY_VALUE']
-            for key in self.TEXT_FIELDS
-            }
-        
-        componente = self.db.to_database(element)
+        for key in self.TEXT_FIELDS:
+            self.TEXT_FIELDS[key]['BD_VALUE'] = self.TEXT_FIELDS[
+                key]['ENTRY_VALUE'] if self.TEXT_FIELDS[
+                    key]['ENTRY_VALUE'] != "" else None 
 
-        self.db.registrar_componente(**componente)
+        self.db.registrar_componente(**self.TEXT_FIELDS)
         
         self.boton_editar.config(
             text='NUEVO (+)'
@@ -221,7 +242,6 @@ class FormAgregar(ttk.Frame):
         self.TEXT_FIELDS = DATA_FIELDS.copy()
         for key in self.TEXT_FIELDS:
             self.TEXT_FIELDS[key] = DATA_FIELDS[key].copy()
-        self.combobox = 0
         
     def limpiar_panel(self, panel):
         for widget in panel.winfo_children():

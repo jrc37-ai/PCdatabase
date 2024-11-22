@@ -37,27 +37,13 @@ class DBOps():
                 
         return components
     
-    def to_database(self, element):
-        component = {}
-        for key in element:
-            if element[key] == "":
-                component[key] = None
-            elif element[key] in [obj.name for obj in self.Item_types]:
-                component[key] = [obj.type_id for obj in self.Item_types
-                                  if obj.name==element[key]][0]
-            else:
-                component[key] = element[key]
-        
-        return component        
-
-    
     def registrar_componente(self, **datos):
         componente = ComponentModel()
         
         for key in datos:
-            setattr(componente, key, datos[key])
-               
-        componente.selected = 0
+            if key in ['item_id', 'selected']:
+                continue
+            setattr(componente, key, datos[key]['BD_VALUE'])
         
         with Session(self.engine) as session:
             session.add(componente)

@@ -20,12 +20,12 @@ BOTON_DISABLED_TEXTO = "#ffffff"
 
 DATA_FIELDS = {
     "item_id": {
-        "FORM_NAME": "ITEM",
-        "BD_VALUE": None,
-        "FORM_VALUE": "",
-        "ENTRY_VALUE": "",
-        "LABEL": None,
-        "ENTRY": None
+        "FORM_NAME": "ITEM",    # Nombre de la columna adaptado para mostrar en la aplicación
+        "BD_VALUE": None,       # Valor extraído directamente de la BD
+        "FORM_VALUE": "",       # Valor adaptado para mostrar en Entry Form
+        "ENTRY_VALUE": "",      # ttk.Entry().get()
+        "LABEL": None,          # tk.Label()
+        "ENTRY": None           # ttk.Entry()
     },
     "category": {
         "FORM_NAME": "CATEGORÍA",
