@@ -44,12 +44,10 @@ class FormDisplay(FormAgregar, ttk.Frame):
         self.configurar_treeview()             
 
         index = 1        
-        lista_ordenada = sorted(self.db.Components, key=lambda x: (x['type_id'], -x['selected']))
-
-        for component in lista_ordenada:
+        for component in self.db.Components:
             values = []
             for key in component:
-                values += [component[key]]
+                values += [component[key]['FORM_VALUE']]
             
             highlight = ('highlight',) if component['selected'] == 1 else ('normal',)
             
@@ -84,8 +82,9 @@ class FormDisplay(FormAgregar, ttk.Frame):
                                      xscrollcommand=x_scroll.set
                                      )
         
-        self.columnas = [key['FORM_NAME'] for key in DATA_FIELDS]
-                
+            
+        self.columnas = [DATA_FIELDS[key]['FORM_NAME'] for key in DATA_FIELDS]
+        
         self.treeview['columns'] = tuple(self.columnas)
                     
         self.treeview.column('#0', width=0, stretch=tk.NO)
@@ -234,20 +233,23 @@ class FormDisplay(FormAgregar, ttk.Frame):
     def seleccionado(self):
         self.fields_reset()
             
-        seleccion = {
-            col:celda
-            for col, celda
-            in zip(self.columnas, self.linea)
-            }
+        seleccion = {col:celda
+                        for col, celda
+                        in zip(self.columnas, self.linea)
+                        }
+        
+        # for key in self.TEXT_FIELDS:
+        #     if self.TEXT_FIELDS[key]['FORM_NAME'] == seleccion[]
         
         for key in self.TEXT_FIELDS:
-            self.TEXT_FIELDS[key]['ENTRY_VALUE'] = seleccion[key]
+            self.TEXT_FIELDS[key]['ENTRY_VALUE'] = seleccion[
+                self.TEXT_FIELDS[key]['FORM_NAME']
+                ]
 
-        element = {
-            self.TEXT_FIELDS[key]['BD_NAME']:
-            self.TEXT_FIELDS[key]['ENTRY_VALUE']
-            for key in self.TEXT_FIELDS
-            }
+        # element = {
+        #     self.TEXT_FIELDS[key]['BD_NAME']:
+        #     self.TEXT_FIELDS[key]['ENTRY_VALUE']
+        #     for key in self.TEXT_FIELDS
+        #     }
     
-        componente = self.db.to_database(element)
-        self.combobox = componente['type_id'] - 1 if componente['type_id'] else 0
+        # componente = self.db.to_database(element)

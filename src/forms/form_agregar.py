@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from datetime import date
+import locale
 
 from database.dboperations import DBOps
 
@@ -9,6 +10,7 @@ from config import *
 class FormAgregar(ttk.Frame):
     def __init__(self, panel_principal) -> None:
         super().__init__(panel_principal)
+        locale.setlocale(locale.LC_TIME, 'spanish') # Establecer la configuración regional a español (España)
         self.field_entries = {}
         self.panel_principal = panel_principal
         self.db = DBOps()
@@ -59,35 +61,33 @@ class FormAgregar(ttk.Frame):
         self.boton_continuar.pack(side=tk.TOP, pady=10)
         
     def mostrar_formulario(self):       
+        # style = ttk.Style()            
+        # style.theme_use("xpnative")    
+        
+        style = ttk.Style()
+        style.theme_settings("xpnative", {
+            "TEntry": {
+                "map": {
+                    "foreground": [('disabled', "black")]
+                    }
+                }
+            })
+            
+        style.theme_use("xpnative")
+                
         for key in self.TEXT_FIELDS:
             
             self.label_info_entry = tk.Frame(self.info_entry, bg=COLOR_CUERPO_PRINCIPAL)
             self.label_info_entry.pack(side=tk.TOP, fill=tk.X, pady=1)
           
-            style = ttk.Style()
-            style.theme_settings("xpnative", {
-                "TEntry": {
-                    "configure": {
-                        'background': 'red'
-                    },
-                    "map": {
-                        "background": [('disabled', 'red'), ('focus', 'red')],
-                        "foreground": [('disabled', "red"), ('focus', 'red')],
-                        "highlightcolor": [('disabled', "red"), ('focus', 'red')],
-                        "relief": [('disabled', "red"), ('focus', 'red')]
-                        }
-                    }
-                })   
-            
-            style.theme_use("xpnative")    
-          
             self.TEXT_FIELDS[key]['ENTRY'] = ttk.Entry(self.label_info_entry,
                                     width=60,
-                                    font=('Arial',12)
+                                    font=('Arial',12),
+                                    style='xpnative.TEntry'
                                     )
             
             if key in ['date']:
-                self.TEXT_FIELDS[key]['ENTRY'].insert(0, date.today())
+                self.TEXT_FIELDS[key]['ENTRY'].insert(0, date.today().strftime("%d/%B/%Y"))
                 
                 self.TEXT_FIELDS[key]['ENTRY'].config(state=tk.DISABLED)
             else:
