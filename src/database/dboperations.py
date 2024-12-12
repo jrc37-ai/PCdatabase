@@ -54,7 +54,9 @@ class DBOps():
             componente = session.query(ComponentModel).filter_by(item_id=item).one()
             
             for key in datos:
-                setattr(componente, key, datos[key])
+                if key in ['item_id', 'selected']:
+                    continue
+                setattr(componente, key, datos[key]['BD_VALUE'])
             
             session.commit()
             

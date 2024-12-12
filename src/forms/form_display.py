@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+from pprint import pprint
 
 import util.util_imagen as util_imagen
 from forms.form_agregar import FormAgregar
@@ -175,7 +176,7 @@ class FormDisplay(FormAgregar, ttk.Frame):
         
         self.btn_marcar = tk.Button(self.labelBarra)
         self.btn_marcar.config(
-            text='Marcar',
+            text='Seleccionar',
             font=('Arial', 10, 'bold'),
             borderwidth=4,
             width=10,
@@ -222,9 +223,16 @@ class FormDisplay(FormAgregar, ttk.Frame):
     def marcar_seleccion(self):
         if self.linea:
             self.seleccionado()     
-            same_type = self.db.get_same_type(self.combobox + 1)
-            for row in same_type:
-                self.db.marcar_componente(row['item_id'], selected=0)
+            
+            
+            same_type = [component['item_id']['BD_VALUE'] for
+                            component in self.db.Components
+                         if component['category']['BD_VALUE'] ==
+                            self.TEXT_FIELDS['category']['ENTRY_VALUE']
+                         ]
+            
+            for item in same_type: ### Todos los componentes del mismo tipo se configurar como selected = 0
+                self.db.marcar_componente(item, selected=0)
             
             self.db.marcar_componente(self.linea[0], selected=1)
 
@@ -238,18 +246,7 @@ class FormDisplay(FormAgregar, ttk.Frame):
                         in zip(self.columnas, self.linea)
                         }
         
-        # for key in self.TEXT_FIELDS:
-        #     if self.TEXT_FIELDS[key]['FORM_NAME'] == seleccion[]
-        
         for key in self.TEXT_FIELDS:
             self.TEXT_FIELDS[key]['ENTRY_VALUE'] = seleccion[
                 self.TEXT_FIELDS[key]['FORM_NAME']
                 ]
-
-        # element = {
-        #     self.TEXT_FIELDS[key]['BD_NAME']:
-        #     self.TEXT_FIELDS[key]['ENTRY_VALUE']
-        #     for key in self.TEXT_FIELDS
-        #     }
-    
-        # componente = self.db.to_database(element)

@@ -198,15 +198,12 @@ class FormAgregar(ttk.Frame):
         )       
 
     def modificar_datos(self):
-        element = {
-            self.TEXT_FIELDS[key]['BD_NAME']:
-            self.TEXT_FIELDS[key]['ENTRY_VALUE']
-            for key in self.TEXT_FIELDS
-            }
-        
-        componente = self.db.to_database(element)
+        for key in self.TEXT_FIELDS:
+            self.TEXT_FIELDS[key]['BD_VALUE'] = self.TEXT_FIELDS[
+                key]['ENTRY_VALUE'] if self.TEXT_FIELDS[
+                    key]['ENTRY_VALUE'] != "" else None 
       
-        self.db.modificar_componente(self.item, **componente)
+        self.db.modificar_componente(self.item, **self.TEXT_FIELDS)
         
         self.boton_editar.config(
             text='VER TODO',
