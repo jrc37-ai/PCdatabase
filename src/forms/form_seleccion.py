@@ -4,7 +4,7 @@ from tkinter import ttk
 from database.dboperations import DBOps
 from config import *
 
-class FormSelect(ttk.Frame):
+class FormSelected(ttk.Frame):
     def __init__(self, panel_principal) -> None:
         self.panel_principal = panel_principal
         

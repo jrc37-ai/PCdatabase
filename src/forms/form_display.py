@@ -224,7 +224,6 @@ class FormDisplay(FormAgregar, ttk.Frame):
         if self.linea:
             self.seleccionado()     
             
-            
             same_type = [component['item_id']['BD_VALUE'] for
                             component in self.db.Components
                          if component['category']['BD_VALUE'] ==
