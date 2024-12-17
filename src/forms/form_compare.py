@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, StringVar
 from pprint import pprint
 
 from database.dboperations import DBOps
@@ -41,22 +41,26 @@ class FormCompare(ttk.Frame):
         cs = ttk.Style()
         cs.theme_use('vista')
         
-        text = 'ELIGE COMPONENTE'
+        text = 'ELIGE COMPONENTE...'
         
         unique_types = [component['category']['FORM_VALUE'].upper() for
                         component in self.db.Components]
         unique_types = list(set(unique_types))
         
-        opciones = ttk.Menubutton(self.labelBarra,
-                                  text=text)
-        menu = tk.Menu(opciones, tearoff=False)
+        max_len = [text] + unique_types
+        max_len = [len(elem) for elem in max_len]
+        max_len = max(max_len) + 5
         
-        for type in unique_types:
-            menu.add_command(
-                label=type,
-                command=None)
+        variable = StringVar()
+        
+        opciones = ttk.OptionMenu(
+            self.labelBarra,
+            variable,
+            variable.set(text),
+            *unique_types,
+            command=None
+        )
 
-        opciones["menu"] = menu
-
+        opciones.config(width=max_len)
         opciones.pack(padx=20, pady=18)
                     
