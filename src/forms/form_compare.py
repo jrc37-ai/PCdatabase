@@ -2,17 +2,21 @@ import tkinter as tk
 from tkinter import ttk, StringVar
 from pprint import pprint
 
-from database.dboperations import DBOps
+from forms.form_display import FormDisplay
 
+from database.dboperations import DBOps
 from config import *
 
-class FormCompare(ttk.Frame):
+class FormCompare(FormDisplay, ttk.Frame):
     def __init__(self, panel_principal) -> None:
         self.panel_principal = panel_principal
         self.db = DBOps()
         
         self.barra_superior = tk.Frame(self.panel_principal)
         self.barra_superior.pack(side=tk.TOP, fill=tk.X, expand=False)
+
+        self.panel_lista = tk.Frame(self.panel_principal)
+        self.panel_lista.pack(side=tk.TOP, fill=tk.X, expand=False)
         
         self.labelBarra = tk.Label(self.barra_superior, text="COMPARAR COMPONENTES")
         self.labelBarra.config(
@@ -36,7 +40,7 @@ class FormCompare(ttk.Frame):
             self.labelnodata.pack(side=tk.TOP, fill=tk.X)
         else:
             self.mostrar_opciones()
-    
+
     def mostrar_opciones(self):
         cs = ttk.Style()
         cs.theme_use('vista')
@@ -58,9 +62,16 @@ class FormCompare(ttk.Frame):
             variable,
             variable.set(text),
             *unique_types,
-            command=None
+            command=self.compare_components
         )
 
         opciones.config(width=max_len)
         opciones.pack(padx=20, pady=18)
-                    
+
+    def compare_components(self, variable):
+        self.limpiar_panel(self.panel_lista)
+        self.mostrar_items()
+
+    def limpiar_panel(self, panel):
+        for widget in panel.winfo_children():
+            widget.destroy()

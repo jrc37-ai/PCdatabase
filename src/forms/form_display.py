@@ -83,7 +83,6 @@ class FormDisplay(FormAgregar, ttk.Frame):
                                      xscrollcommand=x_scroll.set
                                      )
         
-            
         self.columnas = [DATA_FIELDS[key]['FORM_NAME'] for key in DATA_FIELDS]
         
         self.treeview['columns'] = tuple(self.columnas)
