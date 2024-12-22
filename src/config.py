@@ -1,3 +1,9 @@
+BLANCO = "#ffffff"
+NEGRO = "#000000"
+BG_HEAD_ACT_RESULTADO = "#3ba3ec"
+FG_HEAD_ACT_RESULTADO = "#b4c3cd"
+BG_HEADING_RESULTADO = "#3fa557"
+BG_LABEL_RESULTADO = "#3fa557"
 COLOR_BARRA_SUPERIOR = "#1f2329"
 COLOR_MENU_LATERAL = "#2a3138"
 COLOR_CUERPO_PRINCIPAL = "#f1faff"
@@ -12,6 +18,7 @@ COLOR_TABLA_SELECCION = "#e1f3ff"
 COLOR_TABLA_SELECCION_TEXTO = "#000000"
 COLOR_TABLA_TITULO_SEL = "#b4bec4"
 COLOR_TABLA_TITULO_TEXSEL = "#ffffff"
+COLOR_SELECCIONADO = "#a5ff9f"
 BOTON_ADD_FONDO = '#5b9cca'
 BOTON_ADD_TEXTO = "#ffffff"
 BOTON_DISABLED = '#4dda2a'
@@ -132,97 +139,3 @@ DATA_FIELDS = {
         "ENTRY": None
     }
 }
-
-# DATA_FIELDS = {
-#     "COMPONENTE": {
-#         "BD_NAME": "type_id",
-#         "BD_VALUE": None,
-#         "ENTRY_VALUE": "",
-#         "LABEL": None,
-#         "ENTRY": None
-#     },
-#     "Marca": {
-#         "BD_NAME": "brand",
-#         "BD_VALUE": None,
-#         "ENTRY_VALUE": "",
-#         "LABEL": None,
-#         "ENTRY": None
-#     },
-#     "Modelo": {
-#         "BD_NAME": "model",
-#         "BD_VALUE": None,
-#         "ENTRY_VALUE": "",
-#         "LABEL": None,
-#         "ENTRY": None
-#     },
-#     "Tienda": {
-#         "BD_NAME": "seller",
-#         "BD_VALUE": None,
-#         "ENTRY_VALUE": "",
-#         "LABEL": None,
-#         "ENTRY": None
-#     },
-#     "Precio": {
-#         "BD_NAME": "price",
-#         "BD_VALUE": None,
-#         "ENTRY_VALUE": "",
-#         "LABEL": None,
-#         "ENTRY": None
-#     },
-#     "Capacidad": {
-#         "BD_NAME": "capacity",
-#         "BD_VALUE": None,
-#         "ENTRY_VALUE": "",
-#         "LABEL": None,
-#         "ENTRY": None
-#     },
-#     "Velocidad": {
-#         "BD_NAME": "speed",
-#         "BD_VALUE": None,
-#         "ENTRY_VALUE": "",
-#         "LABEL": None,
-#         "ENTRY": None
-#     },
-#     "Certificación": {
-#         "BD_NAME": "certification",
-#         "BD_VALUE": None,
-#         "ENTRY_VALUE": "",
-#         "LABEL": None,
-#         "ENTRY": None
-#     },
-#     "Resolución": {
-#         "BD_NAME": "resolution",
-#         "BD_VALUE": None,
-#         "ENTRY_VALUE": "",
-#         "LABEL": None,
-#         "ENTRY": None
-#     },
-#     "Tasa de refresco": {
-#         "BD_NAME": "refresh",
-#         "BD_VALUE": None,
-#         "ENTRY_VALUE": "",
-#         "LABEL": None,
-#         "ENTRY": None
-#     },
-#     "Calificación": {
-#         "BD_NAME": "rate",
-#         "BD_VALUE": None,
-#         "ENTRY_VALUE": "",
-#         "LABEL": None,
-#         "ENTRY": None
-#     },
-#     "URL": {
-#         "BD_NAME": "url",
-#         "BD_VALUE": None,
-#         "ENTRY_VALUE": "",
-#         "LABEL": None,
-#         "ENTRY": None
-#     },
-#     "Características": {
-#         "BD_NAME": "features",
-#         "BD_VALUE": None,
-#         "ENTRY_VALUE": "",
-#         "LABEL": None,
-#         "ENTRY": None
-#     }
-# }

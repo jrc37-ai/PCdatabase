@@ -7,6 +7,7 @@ from forms.form_agregar import FormAgregar
 from forms.form_info import FormInfo
 from forms.form_display import FormDisplay
 from forms.form_compare import FormCompare
+from forms.form_resultado import FormResultado
 from forms.form_imagenes import FormImagen
 
 # from database.dboperations import DBOps
@@ -56,12 +57,14 @@ class FormMasterDesign(tk.Tk):
         self.buttonAdd = tk.Button(self.menu_lateral)
         self.buttonDisplay = tk.Button(self.menu_lateral)
         self.buttonCompare = tk.Button(self.menu_lateral)
+        self.buttonResult = tk.Button(self.menu_lateral)
         self.buttonInfo = tk.Button(self.menu_lateral)
 
         buttons_info = [
             ("Componente (+) ", self.buttonAdd, self.panel_agregar),
             ("Ver TODO", self.buttonDisplay, self.panel_display),
-            ("Comparar ", self.buttonCompare, self.panel_comparar)
+            ("Comparar ", self.buttonCompare, self.panel_comparar),
+            ("Resultado ", self.buttonResult, self.panel_resultado)
         ]
 
         for text, button, comando in buttons_info:
@@ -124,8 +127,8 @@ class FormMasterDesign(tk.Tk):
         # FormImagen(self.cuerpo_principal, self.img_add)
         FormCompare(self.cuerpo_principal)
         
-    # def panel_edit(self):
-    #     self.limpiar_panel(self.cuerpo_principal)
-    #     FormImagen(self.cuerpo_principal, self.img_add)
+    def panel_resultado(self):
+        self.limpiar_panel(self.cuerpo_principal)
+        FormResultado(self.cuerpo_principal)
 
         

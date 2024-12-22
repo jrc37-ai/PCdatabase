@@ -60,10 +60,7 @@ class FormAgregar(ttk.Frame):
             )
         self.boton_continuar.pack(side=tk.TOP, pady=10)
         
-    def mostrar_formulario(self):       
-        # style = ttk.Style()            
-        # style.theme_use("xpnative")    
-        
+    def mostrar_formulario(self):           
         style = ttk.Style()
         style.theme_settings("xpnative", {
             "TEntry": {
@@ -75,8 +72,7 @@ class FormAgregar(ttk.Frame):
             
         style.theme_use("xpnative")
                 
-        for key in self.TEXT_FIELDS:
-            
+        for key in self.TEXT_FIELDS:  
             self.label_info_entry = tk.Frame(self.info_entry, bg=COLOR_CUERPO_PRINCIPAL)
             self.label_info_entry.pack(side=tk.TOP, fill=tk.X, pady=1)
           
@@ -235,7 +231,7 @@ class FormAgregar(ttk.Frame):
         FormDisplay(self.panel_principal)
     
     def fields_reset(self):
-         # Reiniciar los valores de los entry a None
+        # Reiniciar los valores de los entry a None
         self.TEXT_FIELDS = DATA_FIELDS.copy()
         for key in self.TEXT_FIELDS:
             self.TEXT_FIELDS[key] = DATA_FIELDS[key].copy()

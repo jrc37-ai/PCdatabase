@@ -50,7 +50,7 @@ class FormDisplay(FormAgregar, ttk.Frame):
             for key in component:
                 values += [component[key]['FORM_VALUE']]
             
-            highlight = ('highlight',) if component['selected'] == 1 else ('normal',)
+            highlight = ('highlight',) if component['selected']['FORM_VALUE'] == 1 else ('normal',)
             
             values = tuple(values)
             
@@ -96,7 +96,7 @@ class FormDisplay(FormAgregar, ttk.Frame):
         self.treeview.pack(side=tk.TOP, expand=True, fill=tk.BOTH)
         self.treeview.bind("<<TreeviewSelect>>", self.seleccion_linea)
         
-        self.treeview.tag_configure("highlight", background="lightgreen") # Color de fondo para elementos marcados
+        self.treeview.tag_configure("highlight", background=COLOR_SELECCIONADO) # Color de fondo para elementos marcados
         self.treeview.tag_configure("normal", background=COLOR_TABLA_TEXTO_FONDO) # Color de fondo para elementos no marcados
         
         y_scroll.config(command=self.treeview.yview)
@@ -191,7 +191,7 @@ class FormDisplay(FormAgregar, ttk.Frame):
             )
         self.btn_marcar.pack(side=tk.RIGHT, pady=10, padx=10)
         
-        self.selected_items = {} ###########################################
+        # self.selected_items = {} ###########################################
     
     def activar_panel_entradas(self):
         if self.linea:

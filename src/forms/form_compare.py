@@ -14,9 +14,6 @@ class FormCompare(FormDisplay, ttk.Frame):
         
         self.barra_superior = tk.Frame(self.panel_principal)
         self.barra_superior.pack(side=tk.TOP, fill=tk.X, expand=False)
-
-        self.panel_lista = tk.Frame(self.panel_principal)
-        self.panel_lista.pack(side=tk.TOP, fill=tk.X, expand=False)
         
         self.labelBarra = tk.Label(self.barra_superior, text="COMPARAR COMPONENTES")
         self.labelBarra.config(
@@ -39,8 +36,10 @@ class FormCompare(FormDisplay, ttk.Frame):
             )
             self.labelnodata.pack(side=tk.TOP, fill=tk.X)
         else:
+            self.boton_marcar()
             self.mostrar_opciones()
-
+            self.configurar_treeview()
+        
     def mostrar_opciones(self):
         cs = ttk.Style()
         cs.theme_use('vista')
@@ -55,23 +54,85 @@ class FormCompare(FormDisplay, ttk.Frame):
         max_len = [len(elem) for elem in max_len]
         max_len = max(max_len) + 5
         
-        variable = StringVar()
+        self.variable = StringVar()
         
         opciones = ttk.OptionMenu(
             self.labelBarra,
-            variable,
-            variable.set(text),
+            self.variable,
+            self.variable.set(text),
             *unique_types,
             command=self.compare_components
         )
 
         opciones.config(width=max_len)
-        opciones.pack(padx=20, pady=18)
+        opciones.pack(side=tk.RIGHT, padx=20, pady=18)
 
     def compare_components(self, variable):
-        self.limpiar_panel(self.panel_lista)
-        self.mostrar_items()
+        self.treeview.delete(*self.treeview.get_children())
+        
+        componentes = [component for component in self.db.Components if
+                         component["category"]["BD_VALUE"].upper() == variable]
 
-    def limpiar_panel(self, panel):
-        for widget in panel.winfo_children():
-            widget.destroy()
+        index = 1
+        for component in componentes:
+            values = []
+            for key in component:
+                values += [component[key]['FORM_VALUE']]
+            
+            highlight = ('highlight',) if component['selected']['FORM_VALUE'] == 1 else ('normal',)
+            
+            values = tuple(values)
+            
+            self.treeview.insert(
+                parent='',
+                index=index,
+                iid=index,
+                text='',
+                tags=highlight,
+                values=values
+                )
+            index += 1
+    
+    def seleccion_linea(self, event):                
+        self.btn_marcar.config(state='normal')
+        
+        self.seleccion = event.widget.selection()
+        if self.seleccion:
+            self.linea = event.widget.item(self.seleccion[0], 'values')
+
+    def marcar_seleccion(self):
+        if self.linea:
+            self.seleccionado()     
+            
+            same_type = [component['item_id']['BD_VALUE'] for
+                            component in self.db.Components
+                         if component['category']['BD_VALUE'] ==
+                            self.TEXT_FIELDS['category']['ENTRY_VALUE']
+                         ]
+            
+            for item in same_type: ### Todos los componentes del mismo tipo se configurar como selected = 0
+                self.db.marcar_componente(item, selected=0)
+            
+            self.db.marcar_componente(self.linea[0], selected=1)
+        
+        self.db.Components = self.db.get_components()
+        self.compare_components(self.variable.get())
+    
+    def boton_marcar(self):
+        self.btn_marcar = tk.Button(self.labelBarra)
+        self.btn_marcar.config(
+            text='Seleccionar',
+            font=('Arial', 10, 'bold'),
+            borderwidth=4,
+            width=10,
+            relief='flat',
+            overrelief='groove',
+            background=BOTON_ADD_FONDO,
+            foreground=BOTON_ADD_TEXTO,
+            activebackground=BOTON_ADD_FONDO,
+            activeforeground=BOTON_ADD_TEXTO,
+            disabledforeground=COLOR_BARRA_TABLA,
+            command=self.marcar_seleccion,
+            state='disabled'
+            )
+        self.btn_marcar.pack(side=tk.RIGHT, pady=10, padx=10)

@@ -33,6 +33,8 @@ class DBOps():
                 FIELDS[key]['BD_VALUE'] = dato
                 if dato is not None:
                     FIELDS[key]['FORM_VALUE'] = dato
+                if key == 'price':
+                    FIELDS[key]['FORM_VALUE'] = "$ {:,.2f}".format(dato)
             components += [FIELDS]
                 
         return components
