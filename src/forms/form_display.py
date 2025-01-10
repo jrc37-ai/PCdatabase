@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, StringVar
 from pprint import pprint
 
 import util.util_imagen as util_imagen
@@ -136,6 +136,62 @@ class FormDisplay(FormAgregar, ttk.Frame):
             self.linea = event.widget.item(self.seleccion[0], 'values')
             # self.sel = event.widget.item(self.seleccion[0], tags='seleccion')
     
+    def filtrar_componentes(self):
+        cs = ttk.Style()
+        cs.theme_use('vista')
+        
+        text = 'FILTRAR COMPONENTE...'
+        
+        unique_types = [component['category']['FORM_VALUE'].upper() for
+                        component in self.db.Components]
+        unique_types = list(set(unique_types)) + ['VER TODO']
+        
+        max_len = [text] + unique_types
+        max_len = [len(elem) for elem in max_len]
+        max_len = max(max_len) + 5
+        
+        self.variable = StringVar()
+        
+        opciones = ttk.OptionMenu(
+            self.labelBarra,
+            self.variable,
+            self.variable.set(text),
+            *unique_types,
+            command=self.compare_components
+        )
+
+        opciones['menu'].insert_separator(len(unique_types)-1)
+        opciones.config(width=max_len)
+        opciones.pack(side=tk.RIGHT, padx=20, pady=18)
+    
+    def compare_components(self, variable):
+        self.treeview.delete(*self.treeview.get_children())
+        
+        componentes = [component for component in self.db.Components if
+                         component["category"]["BD_VALUE"].upper() == variable]
+        if not componentes:
+            componentes = self.db.Components
+
+        index = 1
+        for component in componentes:
+            values = []
+            for key in component:
+                values += [component[key]['FORM_VALUE']]
+            
+            highlight = ('highlight',) if component['selected']['FORM_VALUE'] == 1 else ('normal',)
+            
+            values = tuple(values)
+            
+            self.treeview.insert(
+                parent='',
+                index=index,
+                iid=index,
+                text='',
+                tags=highlight,
+                values=values
+                )
+            index += 1
+    
     def mostrar_botones(self):
         self.btn_eliminar = tk.Button(self.labelBarra)
         self.btn_eliminar.config(
@@ -191,7 +247,7 @@ class FormDisplay(FormAgregar, ttk.Frame):
             )
         self.btn_marcar.pack(side=tk.RIGHT, pady=10, padx=10)
         
-        # self.selected_items = {} ###########################################
+        self.filtrar_componentes()
     
     def activar_panel_entradas(self):
         if self.linea:
@@ -246,5 +302,7 @@ class FormDisplay(FormAgregar, ttk.Frame):
         
         for key in self.TEXT_FIELDS:
             self.TEXT_FIELDS[key]['ENTRY_VALUE'] = seleccion[
-                self.TEXT_FIELDS[key]['FORM_NAME']
-                ]
+                    self.TEXT_FIELDS[key]['FORM_NAME']
+                    ]    
+            # if key == 'price':
+            #     self.TEXT_FIELDS[key]['ENTRY_VALUE'] = self.TEXT_FIELDS[key]['ENTRY_VALUE']  ##################################
