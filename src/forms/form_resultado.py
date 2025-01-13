@@ -56,7 +56,7 @@ class FormResultado(ttk.Frame):
         
         index = 1     
         for component in self.selected:
-            values = [component[key]['FORM_VALUE']
+            values = [component[key]['TREE_VALUE']
                       for key in component
                       if component[key]['FORM_NAME'] in self.columnas]    
             

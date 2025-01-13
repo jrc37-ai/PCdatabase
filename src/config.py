@@ -30,6 +30,7 @@ DATA_FIELDS = {
         "FORM_NAME": "ITEM",    # Nombre de la columna adaptado para mostrar en la aplicación
         "BD_VALUE": None,       # Valor extraído directamente de la BD
         "FORM_VALUE": "",       # Valor adaptado para mostrar en Entry Form
+        "TREE_VALUE": "",       # Valor adaptado para mostrar en Treeview
         "ENTRY_VALUE": "",      # ttk.Entry().get()
         "LABEL": None,          # tk.Label()
         "ENTRY": None           # ttk.Entry()
@@ -38,6 +39,7 @@ DATA_FIELDS = {
         "FORM_NAME": "CATEGORÍA",
         "BD_VALUE": None,
         "FORM_VALUE": "",
+        "TREE_VALUE": "",
         "ENTRY_VALUE": "",
         "LABEL": None,
         "ENTRY": None
@@ -46,6 +48,7 @@ DATA_FIELDS = {
         "FORM_NAME": "MARCA",
         "BD_VALUE": None,
         "FORM_VALUE": "",
+        "TREE_VALUE": "",
         "ENTRY_VALUE": "",
         "LABEL": None,
         "ENTRY": None
@@ -54,6 +57,7 @@ DATA_FIELDS = {
         "FORM_NAME": "MODELO",
         "BD_VALUE": None,
         "FORM_VALUE": "",
+        "TREE_VALUE": "",
         "ENTRY_VALUE": "",
         "LABEL": None,
         "ENTRY": None
@@ -62,6 +66,7 @@ DATA_FIELDS = {
         "FORM_NAME": "PRECIO",
         "BD_VALUE": None,
         "FORM_VALUE": "",
+        "TREE_VALUE": "",
         "ENTRY_VALUE": "",
         "LABEL": None,
         "ENTRY": None
@@ -70,6 +75,7 @@ DATA_FIELDS = {
         "FORM_NAME": "TIENDA",
         "BD_VALUE": None,
         "FORM_VALUE": "",
+        "TREE_VALUE": "",
         "ENTRY_VALUE": "",
         "LABEL": None,
         "ENTRY": None
@@ -78,6 +84,7 @@ DATA_FIELDS = {
         "FORM_NAME": "CAPACIDAD",
         "BD_VALUE": None,
         "FORM_VALUE": "",
+        "TREE_VALUE": "",
         "ENTRY_VALUE": "",
         "LABEL": None,
         "ENTRY": None
@@ -86,6 +93,7 @@ DATA_FIELDS = {
         "FORM_NAME": "FRECUENCIA",
         "BD_VALUE": None,
         "FORM_VALUE": "",
+        "TREE_VALUE": "",
         "ENTRY_VALUE": "",
         "LABEL": None,
         "ENTRY": None
@@ -94,6 +102,7 @@ DATA_FIELDS = {
         "FORM_NAME": "RESOLUCIÓN",
         "BD_VALUE": None,
         "FORM_VALUE": "",
+        "TREE_VALUE": "",
         "ENTRY_VALUE": "",
         "LABEL": None,
         "ENTRY": None
@@ -102,6 +111,7 @@ DATA_FIELDS = {
         "FORM_NAME": "CARACTERÍSTICAS",
         "BD_VALUE": None,
         "FORM_VALUE": "",
+        "TREE_VALUE": "",
         "ENTRY_VALUE": "",
         "LABEL": None,
         "ENTRY": None
@@ -110,6 +120,7 @@ DATA_FIELDS = {
         "FORM_NAME": "CALIFICACIÓN",
         "BD_VALUE": None,
         "FORM_VALUE": "",
+        "TREE_VALUE": "",
         "ENTRY_VALUE": "",
         "LABEL": None,
         "ENTRY": None
@@ -118,6 +129,7 @@ DATA_FIELDS = {
         "FORM_NAME": "URL",
         "BD_VALUE": None,
         "FORM_VALUE": "",
+        "TREE_VALUE": "",
         "ENTRY_VALUE": "",
         "LABEL": None,
         "ENTRY": None
@@ -126,6 +138,7 @@ DATA_FIELDS = {
         "FORM_NAME": "FECHA",
         "BD_VALUE": None,
         "FORM_VALUE": "",
+        "TREE_VALUE": "",
         "ENTRY_VALUE": "",
         "LABEL": None,
         "ENTRY": None
@@ -134,6 +147,7 @@ DATA_FIELDS = {
         "FORM_NAME": "SEL",
         "BD_VALUE": None,
         "FORM_VALUE": "",
+        "TREE_VALUE": "",
         "ENTRY_VALUE": "",
         "LABEL": None,
         "ENTRY": None

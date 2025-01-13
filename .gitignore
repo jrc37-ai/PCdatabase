@@ -1,2 +1,4 @@
 /.env
 /src/.tmp.driveupload
+/src/__pycache__
+/.vscode

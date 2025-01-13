@@ -22,6 +22,13 @@ class DBOps():
             
         return components
     
+    def get_one_component(self, item):
+        with Session(self.engine) as session:
+            element = [session.query(ComponentModel).filter_by(item_id=item).one()]
+            component = self.from_database(element)
+
+        return component[0]
+    
     def from_database(self, elements):
         components = []
         
@@ -33,8 +40,9 @@ class DBOps():
                 FIELDS[key]['BD_VALUE'] = dato
                 if dato is not None:
                     FIELDS[key]['FORM_VALUE'] = dato
+                    FIELDS[key]['TREE_VALUE'] = dato
                 if key == 'price':
-                    FIELDS[key]['FORM_VALUE'] = "$ {:,.2f}".format(dato)
+                    FIELDS[key]['TREE_VALUE'] = "$ {:,.2f}".format(dato)
             components += [FIELDS]
                 
         return components

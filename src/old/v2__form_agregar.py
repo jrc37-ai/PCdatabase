@@ -2,7 +2,6 @@ import tkinter as tk
 from tkinter import ttk
 from datetime import date
 import locale
-from rich import print
 
 from database.dboperations import DBOps
 
@@ -45,9 +44,9 @@ class FormAgregar(ttk.Frame):
                 
         self.mostrar_formulario()
         
-        self.boton_agregar = tk.Button(self.info_entry)
-        self.boton_agregar.config(
-            text=self.texto_agregar,
+        self.boton_continuar = tk.Button(self.info_entry)
+        self.boton_continuar.config(
+            text='CONTINUAR',
             font=('Arial', 12, 'bold'),
             borderwidth=4,
             width=40,
@@ -57,25 +56,9 @@ class FormAgregar(ttk.Frame):
             foreground=BOTON_ADD_TEXTO,
             activebackground=BOTON_ADD_FONDO,
             activeforeground=BOTON_ADD_TEXTO,
-            command=self.comando
+            command=self.mostrar_resumen
             )
-        self.boton_agregar.pack(side=tk.RIGHT, pady=10)
-
-        self.boton_editar = tk.Button(self.info_entry)
-        self.boton_editar.config(
-            text='ATRÁS',
-            font=('Arial', 12, 'bold'),
-            borderwidth=4,
-            width=40,
-            relief='flat',
-            overrelief='groove',
-            background=BOTON_ADD_FONDO,
-            foreground=BOTON_ADD_TEXTO,
-            activebackground=BOTON_ADD_FONDO,
-            activeforeground=BOTON_ADD_TEXTO,
-            command=self.ver_todo
-            )
-        self.boton_editar.pack(side=tk.RIGHT, padx=10)        
+        self.boton_continuar.pack(side=tk.TOP, pady=10)
         
     def mostrar_formulario(self):           
         style = ttk.Style()
@@ -101,6 +84,7 @@ class FormAgregar(ttk.Frame):
             
             if key in ['date']:
                 self.TEXT_FIELDS[key]['ENTRY'].insert(0, date.today().strftime("%d/%B/%Y"))
+                
                 self.TEXT_FIELDS[key]['ENTRY'].config(state=tk.DISABLED)
             else:
                 self.TEXT_FIELDS[key]['ENTRY'].insert(0, self.TEXT_FIELDS[key]['ENTRY_VALUE'])
@@ -120,20 +104,87 @@ class FormAgregar(ttk.Frame):
             self.TEXT_FIELDS[key]['LABEL'].pack(side=tk.LEFT)
             self.TEXT_FIELDS[key]['ENTRY'].pack(side=tk.LEFT, padx=10)
         
-    def ingresar_datos(self):
+    def mostrar_resumen(self):
         for key in self.TEXT_FIELDS:
             self.TEXT_FIELDS[key]['ENTRY_VALUE'] = self.TEXT_FIELDS[key]['ENTRY'].get()
+            
+        self.limpiar_panel(self.panel_principal)
+        self.top_bar('RESUMEN')
+        
+        for key in self.TEXT_FIELDS:
+            frame_resumen = tk.Frame(self.panel_principal, bg=COLOR_CUERPO_PRINCIPAL)
+            frame_resumen.pack(side=tk.TOP, pady=1)
+
+            label_resumen_campo = tk.Label(frame_resumen, text=self.TEXT_FIELDS[key]['FORM_NAME'])
+            label_resumen_dato = tk.Label(frame_resumen, text=self.TEXT_FIELDS[key]['ENTRY_VALUE'])
+            
+            if key in ['item_id', 'selected']:
+                continue
+            
+            label_resumen_campo.config(
+                    fg=COLOR_TABLA_TEXTO,
+                    font=("Helvetica", 12),
+                    bg=COLOR_TABLA_TITULO_FONDO,
+                    width=20
+                    )
+            label_resumen_campo.pack(side=tk.LEFT, padx=10)
+            
+            label_resumen_dato.config(
+                    fg=COLOR_TABLA_TEXTO,
+                    font=("Helvetica", 12),
+                    bg=COLOR_TABLA_TITULO_FONDO,
+                    width=40
+                    )
+            label_resumen_dato.pack(side=tk.LEFT)
+
+        frame_botones = tk.Frame(self.panel_principal, bg=COLOR_CUERPO_PRINCIPAL)
+        frame_botones.pack(side=tk.TOP, pady=10)
+        
+        self.boton_editar = tk.Button(frame_botones)
+        self.boton_editar.config(
+            text='EDITAR',
+            font=('Arial', 12, 'bold'),
+            borderwidth=4,
+            width=40,
+            relief='flat',
+            overrelief='groove',
+            background=BOTON_ADD_FONDO,
+            foreground=BOTON_ADD_TEXTO,
+            activebackground=BOTON_ADD_FONDO,
+            activeforeground=BOTON_ADD_TEXTO,
+            command=self.panel_entradas
+            )
+        self.boton_editar.pack(side=tk.LEFT)        
+        
+        self.boton_agregar = tk.Button(frame_botones)
+        self.boton_agregar.config(
+            text=self.texto_agregar, # AGREGAR O MODIFICAR
+            font=('Arial', 12, 'bold'),
+            borderwidth=4,
+            width=40,
+            relief='flat',
+            overrelief='groove',
+            background=BOTON_ADD_FONDO,
+            foreground=BOTON_ADD_TEXTO,
+            activebackground=BOTON_ADD_FONDO,
+            activeforeground=BOTON_ADD_TEXTO,
+            command=self.comando,
+        )
+        self.boton_agregar.pack(side=tk.LEFT, padx=10)
+        
+    def ingresar_datos(self):
+        for key in self.TEXT_FIELDS:
             self.TEXT_FIELDS[key]['BD_VALUE'] = self.TEXT_FIELDS[
                 key]['ENTRY_VALUE'] if self.TEXT_FIELDS[
                     key]['ENTRY_VALUE'] != "" else None 
 
         self.db.registrar_componente(**self.TEXT_FIELDS)
         
-        # self.boton_editar.config(
-        #     text='NUEVO (+)'
-        #     )
+        self.boton_editar.config(
+            text='NUEVO (+)'
+            )
         
-        # self.fields_reset()
+        self.fields_reset()
                 
         self.boton_agregar.config(
             text='AGREGADO',
@@ -144,18 +195,16 @@ class FormAgregar(ttk.Frame):
 
     def modificar_datos(self):
         for key in self.TEXT_FIELDS:
-            self.TEXT_FIELDS[key]['ENTRY_VALUE'] = self.TEXT_FIELDS[key]['ENTRY'].get()
             self.TEXT_FIELDS[key]['BD_VALUE'] = self.TEXT_FIELDS[
                 key]['ENTRY_VALUE'] if self.TEXT_FIELDS[
                     key]['ENTRY_VALUE'] != "" else None 
       
-        print(self.TEXT_FIELDS)
         self.db.modificar_componente(self.item, **self.TEXT_FIELDS)
         
-        # self.boton_editar.config(
-        #     text='VER TODO',
-        #     command=self.ver_todo
-        #     )
+        self.boton_editar.config(
+            text='VER TODO',
+            command=self.ver_todo
+            )
         
         self.fields_reset()
                 
