@@ -1,5 +1,8 @@
 BLANCO = "#ffffff"
 NEGRO = "#000000"
+GRIS = "#c9ced1"
+AZUL = "#2f88c5"
+VERDE = "#3fa557"
 BG_HEAD_ACT_RESULTADO = "#3ba3ec"
 FG_HEAD_ACT_RESULTADO = "#b4c3cd"
 BG_HEADING_RESULTADO = "#3fa557"
