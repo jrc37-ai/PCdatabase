@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, messagebox
 from datetime import date
 import locale
 from rich import print
@@ -75,17 +75,19 @@ class FormAgregar(ttk.Frame):
             activeforeground=BOTON_ADD_TEXTO,
             command=self.ver_todo
             )
-        self.boton_editar.pack(side=tk.RIGHT, padx=10)        
-        
-    def mostrar_formulario(self):           
+        self.boton_editar.pack(side=tk.RIGHT, padx=10)
+
+    def mostrar_formulario(self):
         style = ttk.Style()
-        style.theme_settings("xpnative", {
-            "TEntry": {
-                "map": {
-                    "foreground": [('disabled', "black")]
+        style.theme_settings(
+            "xpnative", {
+                "TEntry": {
+                    "map": {
+                        "foreground": [("disabled", "black")]
+                        }
                     }
                 }
-            })
+            )
             
         style.theme_use("xpnative")
                 
@@ -123,24 +125,30 @@ class FormAgregar(ttk.Frame):
     def ingresar_datos(self):
         for key in self.TEXT_FIELDS:
             self.TEXT_FIELDS[key]['ENTRY_VALUE'] = self.TEXT_FIELDS[key]['ENTRY'].get()
-            self.TEXT_FIELDS[key]['BD_VALUE'] = self.TEXT_FIELDS[
-                key]['ENTRY_VALUE'] if self.TEXT_FIELDS[
-                    key]['ENTRY_VALUE'] != "" else None 
+            self.TEXT_FIELDS[key]["BD_VALUE"] = (
+                self.TEXT_FIELDS[key]["ENTRY_VALUE"]
+                if self.TEXT_FIELDS[key]["ENTRY_VALUE"] != ""
+                else None
+            )
 
-        self.db.registrar_componente(**self.TEXT_FIELDS)
-        
-        # self.boton_editar.config(
-        #     text='NUEVO (+)'
-        #     )
-        
-        # self.fields_reset()
-                
-        self.boton_agregar.config(
+        try:
+            self.TEXT_FIELDS['price']['ENTRY'].config(foreground=NEGRO)
+            self.db.registrar_componente(**self.TEXT_FIELDS)
+            
+            self.boton_agregar.config(
             text='AGREGADO',
             background=BOTON_DISABLED,
             disabledforeground=BOTON_DISABLED_TEXTO,
             state=tk.DISABLED
-        )       
+            )       
+        except ValueError as ve:
+            if 'precio' in str(ve):
+                self.TEXT_FIELDS['price']['ENTRY'].config(foreground="red")
+            
+            messagebox.showerror("Dato no válido", "Los datos ingresados no son válidos.")
+            
+        except Exception as e:    
+            messagebox.showerror("Dato no válido", "Los datos ingresados no son válidos.")
 
     def modificar_datos(self):
         for key in self.TEXT_FIELDS:
@@ -150,21 +158,27 @@ class FormAgregar(ttk.Frame):
                     key]['ENTRY_VALUE'] != "" else None 
       
         print(self.TEXT_FIELDS)
-        self.db.modificar_componente(self.item, **self.TEXT_FIELDS)
         
-        # self.boton_editar.config(
-        #     text='VER TODO',
-        #     command=self.ver_todo
-        #     )
-        
-        self.fields_reset()
-                
-        self.boton_agregar.config(
-            text='MODIFICADO',
-            background=BOTON_DISABLED,
-            disabledforeground=BOTON_DISABLED_TEXTO,
-            state=tk.DISABLED
-        )       
+        try:
+            self.TEXT_FIELDS['price']['ENTRY'].config(foreground=NEGRO)
+            self.db.modificar_componente(self.item, **self.TEXT_FIELDS)
+            
+            self.fields_reset()
+                    
+            self.boton_agregar.config(
+                text='MODIFICADO',
+                background=BOTON_DISABLED,
+                disabledforeground=BOTON_DISABLED_TEXTO,
+                state=tk.DISABLED
+            )      
+        except ValueError as ve:
+            if 'precio' in str(ve):
+                self.TEXT_FIELDS['price']['ENTRY'].config(foreground="red")
+            
+            messagebox.showerror("Dato no válido", "Los datos ingresados no son válidos.")
+            
+        except Exception as e:    
+            messagebox.showerror("Dato no válido", "Los datos ingresados no son válidos.")
     
     def eliminar_datos(self):
         self.db.eliminar_componente(self.item)

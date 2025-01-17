@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk, StringVar
 from rich import print
 import locale
+import webbrowser
 
 import util.util_imagen as util_imagen
 from forms.form_agregar import FormAgregar
@@ -167,7 +168,13 @@ class FormDisplay(FormAgregar, ttk.Frame):
         self.seleccion = event.widget.selection()
         if self.seleccion:
             self.linea = event.widget.item(self.seleccion[0], "values")
-            # self.sel = event.widget.item(self.seleccion[0], tags='seleccion')
+            
+        if self.linea:
+            self.seleccionado()
+            if self.selected["url"]["FORM_VALUE"]:
+                self.btn_url.config(state="normal")
+            else:
+                self.btn_url.config(state="disabled")
 
     def filtrar_componentes(self):
         cs = ttk.Style()
@@ -253,6 +260,24 @@ class FormDisplay(FormAgregar, ttk.Frame):
             state="disabled",
         )
         self.btn_marcar.pack(side=tk.RIGHT, pady=10, padx=10)
+        
+        self.btn_url = tk.Button(self.labelBarra)
+        self.btn_url.config(
+            text="Ir a URL",
+            font=("Arial", 10, "bold"),
+            borderwidth=4,
+            width=10,
+            relief="flat",
+            overrelief="groove",
+            background=BOTON_ADD_FONDO,
+            foreground=BOTON_ADD_TEXTO,
+            activebackground=BOTON_ADD_FONDO,
+            activeforeground=BOTON_ADD_TEXTO,
+            disabledforeground=COLOR_BARRA_TABLA,
+            command=self.ir_url,
+            state="disabled",
+        )
+        self.btn_url.pack(side=tk.RIGHT, pady=10, padx=10)
 
         self.filtrar_componentes()
 
@@ -347,6 +372,12 @@ class FormDisplay(FormAgregar, ttk.Frame):
         )
         self.boton_agregar.pack(side=tk.LEFT, padx=10)
 
+    def ir_url(self):
+        if self.linea:
+            self.seleccionado()
+            url = self.selected["url"]["FORM_VALUE"]
+            webbrowser.open(url)
+    
     def marcar_seleccion(self):
         if self.linea:
             self.seleccionado()

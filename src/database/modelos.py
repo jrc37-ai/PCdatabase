@@ -1,6 +1,7 @@
 from sqlalchemy import Column
 from sqlalchemy import String, Integer, Numeric, Text, SmallInteger
-from sqlalchemy.orm import declarative_base
+from sqlalchemy.orm import declarative_base, validates
+from rich import print
 
 Base = declarative_base()
 
@@ -21,3 +22,17 @@ class ComponentModel(Base):
     url = Column(Text)
     date = Column(String, nullable=False)
     selected = Column(SmallInteger, nullable=False, default=0)
+    
+    @validates('price')
+    def validate_price(self, key, price):
+        try:
+            val_price = float(price)
+        except ValueError:
+            print("--------- El precio debe ser un número.")
+            raise ValueError("El precio debe ser un número.")
+        
+        if val_price <= 0:
+            print("--------- El precio debe ser mayor que cero.")
+            raise ValueError("El precio debe ser mayor que cero.")
+        
+        return price
